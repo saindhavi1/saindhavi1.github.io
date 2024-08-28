@@ -1,7 +1,174 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saindhavi's Personal Website</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/139a68a0b2.js" crossorigin="anonymous"></script>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/min/tiny-slider.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/tiny-slider.css">
+
+
+</head>
+
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <header>
+        <nav class="menu" >
+            <ul class="menu-buttons">
+                <li><a href="#"><img src="images/Black and White Minimalist Professional Initial Logo.png" alt=""></a></li>
+                <li><a href="#about-me">About Me</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#skills">Skills</a></li>
+
+            </ul>
+            <ul class="menu-icons">
+
+                <li><a href="mailto:saindhavit@gmail.com?subject=Discussing%20Future%20Opportunities"><i
+                            class="fa-solid fa-envelope"></i></a></li>
+                <li><a href="https://www.linkedin.com/in/saindhavi/"><i class="fa-brands fa-linkedin"></i></a></li>
+                <li><a href="https://github.com/saindhavi1"><i class="fa-brands fa-github"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="aboutMe" id="about-me">
+        <img src="images/Saindhavi'sPhoto.png" alt="">
+        <p class="title-intro">Hello! I am Saindhavi Thevathasan, an undergraduate student studying Computer
+            Engineering at the University of Waterloo. Look at the projects I have created!</p>
+    </div>
+
+    <div class="projects" id="projects">
+        <h1 class="project-title">Projects by Me</h1>
+
+        <div class="project 1">
+            <img src="nice.jpeg" alt="">
+            <div class="text">
+                <h2>Dual Axis Solar Panel</h2>
+                <p>This solar panel tracker was built using Arduino Uno and tested my skills in not only software but
+                    hardware components. This solar panel tracker will move in the direction of the light using LDR
+                    sensors ro detect the light and servo motors to move the solar panel. This project won first place
+                    for the Kids for Kids Toronto Coding Club's first ever hackathon, GenZCanHack!</p>
+                    <br>
+                    <p class="language">Language: Arduino C++</p>
+                <div class="buttons">
+                    <button class="github"><a href="#">Github</a></button>
+                <button class="pitch"><a href="#">Presentation</a></button>
+                <button class="demo"><a href="#">Demo</a></button>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="project 2">
+            <img src="images/CPUSimulator.png" alt="">
+            <div class="text">
+                <h2>CPU Simulator</h2>
+                <p>This application simulates the inner workings of the ARM v7 16 bit Central Processing Unit (CPU) of a
+                    computer, specifically in terms of storing values in registries and perform arithmetic operations.
+                    This CPU simulator allows the user to type in certain commands within assembly language to perform
+                    certain arithmetic operations and then show the CPU in action! This simulator also has a special
+                    register called the CPSR (Current Program Status Register). This register will tell if the answer to
+                    an operationis an Integer (I), Negative number (N), Zero (Z), has a Carry (C) or overflows (V) by
+                    showing their respective flags in the brackets.</p>
+                    <br>
+                <p class="language">Language: Java</p>
+                <div class="buttons">
+                    <button class="github"><a href="https://github.com/saindhavi1/VirtualCPUSimulator">Github</a></button>
+                </div>
+                
+            </div>
+
+        </div>
+
+        <div class="project 3">
+            <img src="images/FindMyApplicationMap.png" alt="">
+            <div class="text">
+                <h2>Find My University Map Application</h2>
+                <p>Collaboratively created an application for highschoo seniors looking for information about
+                    universities. I was tasked to create a map of all the universities in southern Ontario using the
+                    JXMapViewer API. The map is interactive as will filter by distance, the saved programs of the user
+                    and what universities you want to select. You will also be able to click on the university's logo to
+                    find more information about the university!</p>
+                    <br>
+                    <p class="language">Language: Java</p>
+                    <div class="buttons">
+                        <button class="github"><a href="https://github.com/saindhavi1/FindMyUniMap">Github</a></button>
+                    </div>
+                
+            </div>
+
+        </div>
+    </div>
+
+    <section class="skills">
+        <div class="container">
+            <div class="subcontainer">
+                <div class="slider-wrapper">
+                    <div>
+                        <h1 class="skills-header">Skills</h1>
+                    </div>
+                    <br>
+                    <div class="my-slider">
+                        <div class="slide">
+                            <img src="images/html.webp" alt="Image 1">
+                            <p>HTML</p>
+                        </div>
+                        <div class="slide">
+                            <img src="images/css.webp" alt="Image 2">
+                            <p>CSS</p>
+                        </div>
+                        <div class="slide">
+                            <img src="images/js-removebg-preview.png" alt="Image 3">
+                            <p>JavaScript</p>
+                        </div>
+                        <div class="slide">
+                            <img src="images/nodejs-removebg-preview.png" alt="Image 2">
+                            <p>NodeJS</p>
+                        </div>
+                        <div class="slide">
+                            <img src="images/postgres.png" alt="Image 4">
+                            <p>PostgreSQL</p>
+                        </div>
+                        <div class="slide">
+                            <img src="images/java-removebg-preview.png" alt="Image 5">
+                            <p>Java</p>
+                        </div>
+                        <div class="slide">
+                            <img src="images/python-removebg-preview.png" alt="Image 5">
+                            <p>Python</p>
+                        </div>
+                        <div class="slide">
+                            <img src="images/arduino-removebg-preview.png" alt="Image 5">
+                            <p>Arduino</p>
+                        </div>
+                        <div class="slide">
+                            <img src="images/git.png" alt="Image 5">
+                            <p>Git</p>
+                        </div>
+                        <div class="slide">
+                            <img src="images/github-removebg-preview.png" alt="Image 5">
+                            <p>Github</p>
+                        </div>
+                        <div class="slide">
+                            <img src="images/linux-removebg-preview.png" alt="Image 5">
+                            <p>Linux Commands</p>
+                        </div>
+                        <div class="slide">
+                            <img src="images/api-removebg-preview.png" alt="Image 5">
+                            <p>External APIs</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/script.js"></script>
 </body>
+
 </html>
