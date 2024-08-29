@@ -9,8 +9,6 @@
 
 body {
     background-color: lavender;
-    margin: 5px;
-    padding: 5px;
 }
 
 header {
@@ -25,8 +23,10 @@ nav {
     justify-content: space-between;
     margin-bottom: 2rem;
     top: 0;
-    background-color: lavender;
+    background-color: #3D2C5E;
     overflow: auto;
+    opacity: 1;
+    z-index: 5;
 }
 
 .menu ul li {
@@ -39,14 +39,13 @@ nav {
 
 li a {
     text-decoration: none;
-    color: black;
+    color: lavender;
     font-size: 2rem;
 }
 
 
 .menu a:is(:hover, :focus) {
-    color: #3D2C5E;
-    font-weight: bolder;
+    text-decoration: underline;
 }
 
 .menu-buttons img {
@@ -54,8 +53,13 @@ li a {
 
 }
 
+.aboutMeContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10rem 0;
+}
 .aboutMe {
-
     display: flex;
     width: 60%;
     justify-content: center;
@@ -64,6 +68,7 @@ li a {
     border-radius: 25px;
     border: white solid 2px;
     box-shadow: 3px 3px 3px 3px #8B8BBA;
+   
 }
 
 .title-intro {
@@ -82,6 +87,7 @@ li a {
 .projects {
     display: flex;
     flex-direction: column;
+    
 }
 
 .projects .project-title {
@@ -125,10 +131,10 @@ li a {
     background-color: #8B8BBA;
     width: 10rem;
     border: none;
-    
+
 }
 
-.buttons{
+.buttons {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -137,6 +143,7 @@ li a {
 .projects button a {
     text-decoration: none;
     color: white;
+    width: 50%;
 }
 
 .projects button:hover {
@@ -149,6 +156,7 @@ li a {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 10rem 0;
 }
 
 .skills-header {
@@ -228,6 +236,34 @@ li a {
 
 }
 
+.hidden {
+    opacity: 0;
+    transition: all 1s;
+    transform: translateY(-100%);
+    filter: blur(5px);
+}
+
+.show {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+.project:nth-child(2){
+    transition-delay: 200ms;
+}
+
+.project:nth-child(3){
+    transition-delay: 400ms;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
 
 @media (max-width: 1200px) {
     nav {
@@ -302,7 +338,7 @@ li a {
     }
 
     .projects img {
-        width: 100%;
+        width: 25%;
     }
 
     .projects div {
@@ -316,5 +352,11 @@ li a {
 
     .slide img {
         width: 80%;
+    }
+}
+
+@media(prefers-reduced-motion){
+    .hidden{
+        transition: none;
     }
 }

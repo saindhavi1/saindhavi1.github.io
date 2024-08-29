@@ -17,9 +17,9 @@
 
 <body>
     <header>
-        <nav class="menu" >
+        <nav class="menu">
             <ul class="menu-buttons">
-                <li><a href="#"><img src="images/Black and White Minimalist Professional Initial Logo.png" alt=""></a></li>
+                <li><img src="images/Black and White Minimalist Professional Initial Logo.png" alt=""></li>
                 <li><a href="#about-me">About Me</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#skills">Skills</a></li>
@@ -35,36 +35,42 @@
         </nav>
     </header>
 
-    <div class="aboutMe" id="about-me">
-        <img src="images/Saindhavi'sPhoto.png" alt="">
-        <p class="title-intro">Hello! I am Saindhavi Thevathasan, an undergraduate student studying Computer
-            Engineering at the University of Waterloo. Look at the projects I have created!</p>
+    <div class="section aboutMeContainer">
+        <div class="hidden aboutMe" id="about-me">
+            <img src="images/Saindhavi'sPhoto.png" alt="">
+            <p class="title-intro">Hello! I am Saindhavi Thevathasan, an undergraduate student studying Computer
+                Engineering at the University of Waterloo. I am passionate about software but have discovered a new
+                interest in hardware! Fun fact about me is that one of my deepest passions is reaffirming my learning by
+                teaching others!</p>
+        </div>
     </div>
 
-    <div class="projects" id="projects">
+
+    <div class="section projects" id="projects">
         <h1 class="project-title">Projects by Me</h1>
 
-        <div class="project 1">
-            <img src="nice.jpeg" alt="">
+        <div class="hidden project 1">
+            <img src="images/DualAxisSolarPanel.png" alt="">
             <div class="text">
                 <h2>Dual Axis Solar Panel</h2>
                 <p>This solar panel tracker was built using Arduino Uno and tested my skills in not only software but
-                    hardware components. This solar panel tracker will move in the direction of the light using LDR
-                    sensors ro detect the light and servo motors to move the solar panel. This project won first place
-                    for the Kids for Kids Toronto Coding Club's first ever hackathon, GenZCanHack!</p>
-                    <br>
-                    <p class="language">Language: Arduino C++</p>
+                    hardware components as I was required to create an execute a circuit design. This solar panel
+                    tracker will move in the direction of the light using LDR
+                    sensors to detect the light and servo motors to move the solar panel. This project won first place
+                    for the Kids for Kids Toronto Coding Club's first ever hackathon, GenZCanHack! Look in the README
+                    file to see our presentation and a video of how the solar panel works!</p>
+                <br>
+                <p class="language">Language: Arduino C++</p>
                 <div class="buttons">
-                    <button class="github"><a href="#">Github</a></button>
-                <button class="pitch"><a href="#">Presentation</a></button>
-                <button class="demo"><a href="#">Demo</a></button>
+                    <button class="github"><a
+                            href="https://github.com/saindhavi1/DualAxisSolarPanel/tree/main">Github</a></button>
                 </div>
             </div>
 
 
         </div>
 
-        <div class="project 2">
+        <div class="hidden project 2">
             <img src="images/CPUSimulator.png" alt="">
             <div class="text">
                 <h2>CPU Simulator</h2>
@@ -75,17 +81,18 @@
                     register called the CPSR (Current Program Status Register). This register will tell if the answer to
                     an operationis an Integer (I), Negative number (N), Zero (Z), has a Carry (C) or overflows (V) by
                     showing their respective flags in the brackets.</p>
-                    <br>
+                <br>
                 <p class="language">Language: Java</p>
                 <div class="buttons">
-                    <button class="github"><a href="https://github.com/saindhavi1/VirtualCPUSimulator">Github</a></button>
+                    <button class="github"><a
+                            href="https://github.com/saindhavi1/VirtualCPUSimulator">Github</a></button>
                 </div>
-                
+
             </div>
 
         </div>
 
-        <div class="project 3">
+        <div class="hidden project 3">
             <img src="images/FindMyApplicationMap.png" alt="">
             <div class="text">
                 <h2>Find My University Map Application</h2>
@@ -94,18 +101,18 @@
                     JXMapViewer API. The map is interactive as will filter by distance, the saved programs of the user
                     and what universities you want to select. You will also be able to click on the university's logo to
                     find more information about the university!</p>
-                    <br>
-                    <p class="language">Language: Java</p>
-                    <div class="buttons">
-                        <button class="github"><a href="https://github.com/saindhavi1/FindMyUniMap">Github</a></button>
-                    </div>
-                
+                <br>
+                <p class="language">Language: Java</p>
+                <div class="buttons">
+                    <button class="github"><a href="https://github.com/saindhavi1/FindMyUniMap">Github</a></button>
+                </div>
+
             </div>
 
         </div>
     </div>
 
-    <section class="skills">
+    <section class="hidden section skills">
         <div class="container">
             <div class="subcontainer">
                 <div class="slider-wrapper">
