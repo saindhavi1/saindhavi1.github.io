@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saindhavi Thevathasan — The Route</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --bg:#f5f3ec; --ink:#2a3a30; --mut:#77826f; --accent:#3f7d5f; --accent-soft:#e4efe4; --card:#ffffff; --line:#e2e6dc; }
+  body { font-family: -apple-system,"Inter","Segoe UI",sans-serif; background: var(--bg); color: var(--ink); line-height:1.6; }
+
+  .hero { text-align:center; padding: 60px 24px 40px; position:relative; overflow:hidden;
+    background: linear-gradient(180deg,#cfe6d6 0%, var(--bg) 100%); }
+  .compass { font-size:38px; margin-bottom:8px; }
+  .hero .hills { position:absolute; bottom:0; left:0; width:100%; height:90px; pointer-events:none;
+    background:
+      radial-gradient(50px 50px at 15% 100%, #6b8f5e 60%, transparent 61%),
+      radial-gradient(80px 80px at 45% 100%, #3f7d5f 60%, transparent 61%),
+      radial-gradient(60px 60px at 78% 100%, #6b8f5e 60%, transparent 61%); opacity:.4; }
+  .kicker { font-size:12px; letter-spacing:.24em; text-transform:uppercase; color: var(--accent); font-weight:600; }
+  h1 { font-size: clamp(36px,7vw,60px); letter-spacing:-0.03em; margin:14px 0 8px; font-weight:800; }
+  .sub { font-size:18px; color: var(--mut); }
+  .links { margin-top:20px; }
+  .links a { color: var(--ink); text-decoration:none; border:1.5px solid var(--line); background:var(--card); border-radius:22px; padding:7px 16px; margin:4px; font-size:13px; display:inline-block; transition:all .15s; }
+  .links a:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Horizontal route */
+  .route-wrap { padding: 30px 0 16px; overflow-x:auto; display:flex; justify-content:safe center; }
+  .route-wrap::-webkit-scrollbar { height:10px; } .route-wrap::-webkit-scrollbar-thumb { background:#d5d2c8; border-radius:6px; }
+  .route { position:relative; display:flex; align-items:flex-start; min-width:max-content; padding: 56px 60px 30px; }
+  .route::before { content:""; position:absolute; left:60px; right:60px; top:70px; height:3px;
+    background: linear-gradient(90deg, var(--accent) 0%, #a7c8af 100%); border-radius:3px; opacity:.55; }
+  .stop { width:310px; flex:0 0 310px; padding:0 20px; position:relative; }
+  .marker { width:30px; height:30px; border-radius:50%; background:var(--card); border:3px solid var(--accent); color:var(--accent);
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; margin:0 auto 22px; box-shadow:0 0 0 6px var(--bg); position:relative; z-index:2; }
+  .stop.now .marker { background: var(--accent); color:#fff; }
+  .card { background: var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; box-shadow:0 6px 20px rgba(30,30,50,.05); transition:transform .2s; }
+  .card:hover { transform: translateY(-4px); }
+  .when { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color: var(--accent); font-weight:600; }
+  .card h3 { font-size:19px; margin:4px 0 2px; }
+  .card .co { color: var(--mut); font-size:14px; margin-bottom:10px; }
+  .card ul { margin-left:16px; color:#3d4048; font-size:14px; } .card li { margin-bottom:5px; }
+  .scroll-hint { text-align:center; font-size:12px; color: var(--mut); margin-bottom:20px; }
+
+  .sec { max-width: 980px; margin: 0 auto; padding: 26px 24px; }
+  .sec h2 { font-size:13px; letter-spacing:.16em; text-transform:uppercase; color: var(--mut); margin-bottom:18px; text-align:center; }
+  .groups { display:grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); gap:18px; }
+  .gcard { background: var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; box-shadow:0 4px 14px rgba(30,30,50,.04); }
+  .gcard h4 { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color: var(--accent); margin-bottom:12px; }
+  .chips { display:flex; flex-wrap:wrap; gap:7px; }
+  .chip { background: var(--accent-soft); color:#2f5d3f; border-radius:16px; padding:5px 12px; font-size:12.5px; }
+  .projects { display:grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap:16px; }
+  .proj { background: var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; box-shadow:0 4px 14px rgba(30,30,50,.04); }
+  .proj h4 { margin-bottom:6px; } .proj h4 small { color: var(--accent); font-weight:600; }
+  .proj p { color: var(--mut); font-size:14px; line-height:1.55; }
+  .proj ul { margin:10px 0 0 16px; color:#3d4048; font-size:13.5px; line-height:1.5; } .proj li { margin-bottom:5px; }
+
+  .cta { background: var(--ink); color:#f4f4f6; text-align:center; padding: 48px 24px; margin-top:26px; }
+  .cta h2 { font-size:26px; margin-bottom:8px; color:#fff; letter-spacing:-0.01em; text-transform:none; }
+  .cta p { color:#b8bac4; margin-bottom:18px; }
+  .cta a { color:#fff; text-decoration:none; border:1.5px solid rgba(255,255,255,.4); padding:9px 20px; border-radius:22px; margin:4px; display:inline-block; font-size:14px; }
+  .cta a:hover { background:#fff; color: var(--ink); }
+
+  /* ---- guided tour ---- */
+  .tour { display:flex; align-items:center; justify-content:center; gap:16px; max-width:560px; margin:8px auto 0;
+    background:var(--card); border:1px solid var(--line); border-radius:999px; padding:8px 10px; box-shadow:0 6px 20px rgba(30,50,30,.06); }
+  .tour button { font-family:inherit; font-size:14px; background:var(--accent-soft); color:var(--accent); border:none; border-radius:999px;
+    width:40px; height:40px; cursor:pointer; transition:all .15s; display:flex; align-items:center; justify-content:center; }
+  .tour button:hover:not(:disabled) { background:var(--accent); color:#fff; }
+  .tour button:disabled { opacity:.35; cursor:default; }
+  .tour .status { flex:1; text-align:center; }
+  .tour .status .n { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--mut); }
+  .tour .status .w { font-weight:700; color:var(--ink); font-size:15px; }
+  .tour-hint { text-align:center; font-size:12.5px; color:var(--mut); margin:8px 0 2px; }
+
+  @keyframes pop { 0%{transform:scale(.4);opacity:0} 60%{transform:scale(1.25)} 100%{transform:scale(1)} }
+  .marker { cursor:pointer; transition:transform .2s, background .3s, color .3s; }
+  .marker:hover { transform:scale(1.12); }
+  /* the walking explorer sits above the active marker */
+  .marker .explorer { position:absolute; top:-34px; left:50%; transform:translateX(-50%); font-size:24px; opacity:0; transition:opacity .3s; pointer-events:none; }
+  .marker.here { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .marker.here .explorer { opacity:1; animation:hop 1s ease infinite; }
+  @keyframes hop { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-5px)} }
+  .marker.seen { border-color:var(--accent); color:var(--accent); }
+  .card { position:relative; opacity:.55; transition:opacity .3s, box-shadow .3s, transform .3s; }
+  .card.active { opacity:1; box-shadow:0 0 0 2px var(--accent-soft), 0 12px 30px rgba(63,125,95,.16); transform:translateY(-4px); }
+  .cta.pulse { animation:pulse 1.2s ease infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(63,125,95,0)} 50%{box-shadow:0 0 0 8px rgba(63,125,95,.12)} }
+
+  /* ---- easter eggs ---- */
+  .compass { cursor:pointer; user-select:none; display:inline-block; transition:transform .3s; }
+  .compass:hover { transform:rotate(15deg); }
+  .compass.spin { animation:spin .8s ease; }
+  @keyframes spin { from{transform:rotate(0)} to{transform:rotate(720deg)} }
+  .egg-toast { position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(120%); background:var(--ink); color:#f4f4f0;
+    padding:12px 20px; border-radius:999px; font-size:14px; box-shadow:0 10px 30px rgba(0,0,0,.25); z-index:60; transition:transform .4s ease; max-width:90vw; text-align:center; }
+  .egg-toast.show { transform:translateX(-50%) translateY(0); }
+  .confetti { position:fixed; top:-40px; font-size:22px; z-index:55; pointer-events:none; animation:fall linear forwards; }
+  @keyframes fall { to { transform:translateY(105vh) rotate(360deg); opacity:.9; } }
+</style>
+</head>
+<body>
+  <div class="hero">
+    <div class="compass" id="compass" title="hmm, what happens if you click me?" onclick="poke()">🧭</div>
+    <div class="kicker">A Trail Through My Career</div>
+    <h1>Saindhavi Thevathasan</h1>
+    <p class="sub">Computer Engineering @ Waterloo · Software Engineer</p>
+    <div class="links">
+      <a href="mailto:sthevath@uwaterloo.ca">Email</a>
+      <a href="https://linkedin.com/in/saindhavi">LinkedIn</a>
+      <a href="https://github.com/saindhavi1">GitHub</a>
+      <a href="#">Résumé.pdf</a>
+    </div>
+    <div class="hills"></div>
+  </div>
+
+  <div class="tour">
+    <button id="prev" onclick="step(-1)" aria-label="Previous">◀</button>
+    <div class="status">
+      <div class="n">Stop <span id="idx">1</span> of 4</div>
+      <div class="w" id="where">Powersmiths International</div>
+    </div>
+    <button id="next" onclick="step(1)" aria-label="Next">▶</button>
+  </div>
+  <div class="tour-hint">Walk the trail with ◀ ▶ (or arrow keys) — or tap any pin to jump there 🧭</div>
+
+  <div class="route-wrap">
+    <div class="route">
+      <div class="stop">
+        <div class="marker" onclick="goTo(0)"><span class="explorer">🧭</span>📍</div>
+        <div class="card">
+          <div class="when">Jan – Apr 2025</div>
+          <h3>SWE Intern</h3>
+          <div class="co">Powersmiths International · Brampton</div>
+          <ul>
+            <li>Automated migration of historical test data into a structured DB — 75% less manual entry.</li>
+            <li>Automated transformer test reports (Python, Pandas, MS SQL); integrated Modbus for live data.</li>
+            <li>Built a UI feeding Grafana dashboards — 85% better analysis.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="stop">
+        <div class="marker" onclick="goTo(1)"><span class="explorer">🧭</span>📍</div>
+        <div class="card">
+          <div class="when">Sep – Dec 2025</div>
+          <h3>SWE Intern</h3>
+          <div class="co">Shopify · Toronto</div>
+          <ul>
+            <li>Fixed a data-redaction incident with BigQuery filtering — unblocked 71 tables, 100s of batches.</li>
+            <li>Migrated employee data requests to a cheaper platform (Rails state machines, Flipper) — saved $60K.</li>
+            <li>Deprecated a DB table, fixed metrics, corrected Shop Purge SLA timestamps.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="stop now">
+        <div class="marker" onclick="goTo(2)"><span class="explorer">🧭</span>📍</div>
+        <div class="card">
+          <div class="when">May – Aug 2026 · Now</div>
+          <h3>SWE Intern</h3>
+          <div class="co">Shopify · Toronto</div>
+          <ul>
+            <li>Led a Shopify Taxes migration to a centralized config system, auditing 74 query paths.</li>
+            <li>Shipped dual-write, backfill, parity-check, and rollout-safety tooling in Ruby/Rails.</li>
+            <li>Improved tax-filing workflows: contact lookup, Sales Tax ID validation, GraphQL, flag cleanup.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="stop">
+        <div class="marker" onclick="goTo(3)"><span class="explorer">🧭</span>🎓</div>
+        <div class="card">
+          <div class="when">Ongoing</div>
+          <h3>BASc. Computer Engineering</h3>
+          <div class="co">University of Waterloo</div>
+          <ul><li>Honours candidate.</li><li>Certs: React, XML, WHMIS 2015, Google Kubernetes Engine.</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <h2>Toolkit</h2>
+    <div class="groups">
+      <div class="gcard"><h4>Languages</h4><div class="chips">
+        <span class="chip">Python</span><span class="chip">Java</span><span class="chip">C++</span><span class="chip">C</span><span class="chip">JavaScript</span>
+        <span class="chip">Go</span><span class="chip">SQL</span><span class="chip">HTML</span><span class="chip">CSS</span>
+      </div></div>
+      <div class="gcard"><h4>Frameworks & Libraries</h4><div class="chips">
+        <span class="chip">Ruby on Rails</span><span class="chip">React</span><span class="chip">Node.js</span>
+        <span class="chip">Pandas</span><span class="chip">PyInstaller</span><span class="chip">REST APIs</span><span class="chip">Modbus</span>
+      </div></div>
+      <div class="gcard"><h4>Data</h4><div class="chips">
+        <span class="chip">BigQuery</span><span class="chip">SQL</span><span class="chip">MS SQL</span><span class="chip">Grafana</span><span class="chip">Pandas</span>
+      </div></div>
+      <div class="gcard"><h4>Developer Tools</h4><div class="chips">
+        <span class="chip">Git</span><span class="chip">GitHub</span><span class="chip">Docker</span><span class="chip">Postman</span>
+        <span class="chip">Figma</span><span class="chip">VS Code</span><span class="chip">Eclipse</span><span class="chip">Linux/Unix</span>
+      </div></div>
+      <div class="gcard"><h4>Hardware</h4><div class="chips">
+        <span class="chip">STM32</span><span class="chip">Arduino</span><span class="chip">Embedded C</span><span class="chip">Microcontrollers</span><span class="chip">Soldering</span>
+      </div></div>
+      <div class="gcard"><h4>Certifications</h4><div class="chips">
+        <span class="chip">React Essential Training</span><span class="chip">XML Essential Training</span>
+        <span class="chip">Google Kubernetes Engine</span><span class="chip">WHMIS 2015</span>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>Projects</h2>
+    <div class="projects">
+      <div class="proj"><h4>SenseSecure <small>· Embedded / C</small></h4>
+        <p>A synchronized smart alarm system that coordinates two STM32 microcontrollers over GPIO for real-time signalling and fault tolerance.</p>
+        <ul>
+          <li>Integrated ultrasonic sensors, push buttons, buzzers, and LEDs for multi-modal alerts and manual override, improving versatility ~40%.</li>
+          <li>Written in C: triggers an alert when an object is detected within 30 cm, and disarms on button press.</li>
+        </ul>
+      </div>
+      <div class="proj"><h4>Dual Axis Solar Panel <small>· 🏆 1st place</small></h4>
+        <p>A light-tracking solar panel that reorients itself toward the strongest light source to maximize energy capture.</p>
+        <ul>
+          <li>Built the driving algorithm and robotic arm with LDR sensors and servo motors; full circuit simulated in AutoCAD.</li>
+          <li>Won first place at Kids for Kids Toronto's GenZ Can Hack Hackathon.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta" id="cta">
+    <h2>Where to next?</h2>
+    <p>Always up for exploring a new problem. Let's talk.</p>
+    <a href="mailto:sthevath@uwaterloo.ca">Email</a>
+    <a href="https://linkedin.com/in/saindhavi">LinkedIn</a>
+    <a href="https://github.com/saindhavi1">GitHub</a>
+  </div>
+
+  <script>
+    const stops = [...document.querySelectorAll('.stop')];
+    const names = ['Powersmiths International','Shopify (2025)','Shopify (2026 · Now)','University of Waterloo'];
+    let cur = 0;
+    const seen = new Set();
+
+    function render(){
+      stops.forEach((stop,i)=>{
+        const marker = stop.querySelector('.marker');
+        const card = stop.querySelector('.card');
+        marker.classList.toggle('here', i===cur);
+        marker.classList.toggle('seen', seen.has(i) && i!==cur);
+        card.classList.toggle('active', i===cur);
+      });
+      document.getElementById('idx').textContent = cur+1;
+      document.getElementById('where').textContent = names[cur];
+      document.getElementById('prev').disabled = cur===0;
+      document.getElementById('next').disabled = cur===stops.length-1;
+      stops[cur].scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+      // reaching the end gently nudges the contact CTA
+      if(cur===stops.length-1) document.getElementById('cta').classList.add('pulse');
+    }
+    function goTo(i){ cur = Math.max(0, Math.min(stops.length-1, i)); seen.add(cur); render(); }
+    function step(d){ goTo(cur + d); }
+
+    document.addEventListener('keydown', e=>{
+      if(e.key==='ArrowRight'){ step(1); }
+      else if(e.key==='ArrowLeft'){ step(-1); }
+    });
+    seen.add(0); render();
+
+    // ---- Easter egg: poke the compass ----
+    let pokes = 0;
+    const pokeMsgs = [
+      'You found the compass. Keep going… 🧭',
+      'Two clicks. The needle is spinning… 🧭',
+      'Fun fact: I once built a solar panel that chases the sun ☀️',
+      'Secret unlocked! I debug best with coffee and a good playlist ☕🎵',
+      'Okay okay — you\'re clearly thorough. That\'s a great engineer trait. 🎉'
+    ];
+    function poke(){
+      const c = document.getElementById('compass');
+      c.classList.remove('spin'); void c.offsetWidth; c.classList.add('spin');
+      toast(pokeMsgs[Math.min(pokes, pokeMsgs.length-1)]);
+      pokes++;
+      if(pokes>=5){ confetti(); pokes=0; }
+    }
+
+    let toastTimer;
+    function toast(msg){
+      let t = document.querySelector('.egg-toast');
+      if(!t){ t = document.createElement('div'); t.className='egg-toast'; document.body.appendChild(t); }
+      t.textContent = msg; requestAnimationFrame(()=>t.classList.add('show'));
+      clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove('show'), 3200);
+    }
+    function confetti(big, custom){
+      const emojis = custom || ['🧭','📍','🌿','⭐','🎉','🎊','🍂'];
+      const n = big ? 70 : 34;
+      for(let i=0;i<n;i++){
+        const s = document.createElement('span');
+        s.className='confetti'; s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        s.style.left = Math.random()*100+'vw';
+        s.style.fontSize = (16+Math.random()*18)+'px';
+        s.style.animationDuration = (2.2+Math.random()*2)+'s';
+        s.style.animationDelay = (Math.random()*.5)+'s';
+        document.body.appendChild(s);
+        setTimeout(()=>s.remove(), 5000);
+      }
+    }
+  </script>
+</body>
+</html>

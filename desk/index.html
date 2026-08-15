@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>saindhavi@dev ~ Terminal Résumé</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "SF Mono","JetBrains Mono","Fira Code",Menlo,monospace;
+    background: #0d1117; color: #c9d1d9; line-height: 1.7; font-size: 14.5px;
+    min-height: 100vh; padding: 24px 16px; display:flex; justify-content:center; align-items:center;
+  }
+  .term { width:100%; max-width:1200px; background:#161b22; border:1px solid #30363d; border-radius:10px;
+    overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.5);
+    transition:max-width .4s ease, opacity .55s ease, transform .6s cubic-bezier(.2,.8,.2,1); transform-origin:center; }
+  .term.expanded { max-width:1400px; }
+  .term.enter-hidden { opacity:0; transform:scale(.12); pointer-events:none; }
+  .deskbtn { margin-left:auto; color:#8b949e; font-size:12px; cursor:pointer; border:1px solid #30363d; border-radius:6px; padding:2px 9px; }
+  .deskbtn:hover { color:#e6edf3; border-color:#58a6ff; }
+
+  /* ===== cozy desk scene (CSS-illustrated) ===== */
+  #desk { position:fixed; inset:0; z-index:5; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg,#4a3550 0%, #5b4258 38%, #6d5142 68%, #5a4130 100%);
+    transition:opacity .55s ease, transform .7s cubic-bezier(.4,0,.2,1); }
+  #desk.gone { opacity:0; transform:scale(2.6); pointer-events:none; }
+  /* soft vignette + warm ambient glow */
+  #desk::before { content:""; position:absolute; inset:0; background:radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(0,0,0,.45) 100%); pointer-events:none; z-index:40; }
+
+  .room { position:relative; width:min(1400px,98vw); aspect-ratio:16/10; max-height:96vh; }
+
+  /* wall / floor split */
+  .wall { position:absolute; inset:0 0 26% 0; background:linear-gradient(180deg,#6a5170 0%, #715470 45%, #6b4f5e 100%); }
+  .wall::after { content:""; position:absolute; inset:0; background:radial-gradient(60% 55% at 74% 46%, rgba(255,190,120,.28), transparent 70%); }
+  .floor { position:absolute; left:0; right:0; bottom:0; height:27%;
+    background:linear-gradient(180deg,#5a4531 0%, #4a3826 100%); }
+
+  /* ---- window with sunset ---- */
+  .win { position:absolute; left:6%; top:9%; width:24%; height:46%; border-radius:8px 8px 6px 6px;
+    background:#7a5f45; padding:9px; box-shadow:0 16px 34px rgba(0,0,0,.4); }
+  .win-glass { position:relative; width:100%; height:100%; border-radius:4px; overflow:hidden;
+    background:linear-gradient(180deg,#ffe0a3 0%, #ffb27e 40%, #e78aa0 72%, #8f6ea6 100%); box-shadow:inset 0 0 26px rgba(255,225,180,.55); }
+  .win-sun { position:absolute; left:50%; bottom:30%; transform:translateX(-50%); width:34%; aspect-ratio:1; border-radius:50%;
+    background:radial-gradient(circle,#fff6da 30%,#ffd27a 75%); box-shadow:0 0 34px rgba(255,210,130,.9); }
+  .win-hill { position:absolute; left:0; right:0; bottom:0; height:34%; background:linear-gradient(180deg,#7d6a9a,#5c527e);
+    border-radius:50% 50% 0 0 / 60% 60% 0 0; }
+  .win-hill.two { bottom:0; left:35%; right:-10%; height:26%; background:linear-gradient(180deg,#8a6f96,#6a577f); }
+  .win-bar-v, .win-bar-h { position:absolute; background:#7a5f45; z-index:3; }
+  .win-bar-v { top:0; bottom:0; left:calc(50% - 3px); width:6px; }
+  .win-bar-h { left:0; right:0; top:calc(50% - 3px); height:6px; }
+
+  /* ---- hanging plant near window ---- */
+  .hangplant { position:absolute; left:27%; top:0; width:12%; z-index:1; }
+  .hangplant svg { width:100%; height:auto; display:block; }
+
+  /* ---- shelf + framed art (right wall) ---- */
+  /* ---- wall shelf with framed photo + books resting on it ---- */
+  .shelf { position:absolute; right:6%; top:19%; width:23%; z-index:2; }
+  .shelf .items { display:flex; align-items:flex-end; justify-content:center; gap:20px; padding:0 24px; }
+  .shelf .plank { height:13px; border-radius:3px; background:linear-gradient(#6f5642,#493627); box-shadow:0 10px 18px rgba(0,0,0,.32); }
+  .shelf .bracket { position:absolute; width:9px; height:18px; background:#493627; bottom:-18px; border-radius:0 0 3px 3px; }
+  .shelf .bracket.l { left:20%; } .shelf .bracket.r { right:20%; }
+  .frame { width:72px; height:88px; background:#efe6d4; border:6px solid #6b5340; border-radius:3px; overflow:hidden; box-shadow:0 6px 12px rgba(0,0,0,.28); }
+  .frame-art { position:relative; width:100%; height:100%; background:linear-gradient(180deg,#bfe0ec 0%, #e9d9b0 55%, #9bbf82 100%); }
+  .frame-art::after { content:""; position:absolute; left:0; right:0; bottom:0; height:45%; background:linear-gradient(180deg,#7fae6e,#5c8a52); border-radius:50% 50% 0 0/40% 40% 0 0; }
+  .mini-books { display:flex; align-items:flex-end; gap:3px; }
+  .mini-books i { width:9px; border-radius:1px 1px 0 0; }
+
+  /* ---- movie poster (nod to film/TV) ---- */
+  .poster { position:absolute; right:6.5%; top:37%; width:15%; height:26%; background:#0d0f14; border:5px solid #11151f;
+    border-radius:3px; box-shadow:0 12px 26px rgba(0,0,0,.4); overflow:hidden; }
+  .poster .p-sky { position:absolute; inset:0; background:linear-gradient(180deg,#241d47 0%, #7a3f6b 52%, #e08a4f 100%); }
+  .poster .p-sun { position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); width:46%; aspect-ratio:1; border-radius:50%;
+    background:radial-gradient(circle,#ffe6a8 40%,#ff9e5e 78%); box-shadow:0 0 18px rgba(255,180,110,.7); }
+  .poster .p-mtn { position:absolute; left:0; right:0; bottom:16%; height:38%; background:linear-gradient(180deg,#3a2c4a,#211830);
+    clip-path:polygon(0 100%,18% 42%,36% 74%,58% 22%,80% 62%,100% 46%,100% 100%); }
+  .poster .p-strip { position:absolute; left:0; right:0; height:9%; background:#0a0b0f;
+    background-image:repeating-linear-gradient(90deg, transparent 0 5px, rgba(255,255,255,.75) 5px 8px, transparent 8px 13px);
+    background-size:13px 3px; background-position:center; background-repeat:repeat-x; }
+  .poster .p-strip.t { top:0; } .poster .p-strip.b { bottom:0; }
+  .poster .p-title { position:absolute; left:0; right:0; bottom:9%; text-align:center; font-size:7px; letter-spacing:.22em;
+    color:#ffe9c9; text-shadow:0 1px 2px rgba(0,0,0,.8); }
+
+  /* ---- keyboard + mousepad + mouse (laid flat on the desk with perspective) ---- */
+  .keyboard { position:absolute; left:50%; bottom:-4px; width:min(30%,300px); height:46px; z-index:11;
+    transform-origin:center bottom; transform:translateX(-50%) perspective(560px) rotateX(60deg);
+    border-radius:7px; background:linear-gradient(#3a414d,#242a33);
+    box-shadow:0 10px 16px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.10); }
+  .keyboard::before { content:""; position:absolute; inset:6px 8px 10px; border-radius:4px; background:#2b3038;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.11) 0 13px, transparent 13px 16px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.11) 0 8px, transparent 8px 11px); }
+  .keyboard::after { content:""; position:absolute; left:28%; right:28%; bottom:6px; height:7px; border-radius:3px; background:#3c434f; box-shadow:inset 0 1px 0 rgba(255,255,255,.12); }
+  .mousepad { position:absolute; left:66%; bottom:-2px; width:11%; max-width:112px; height:40px; z-index:11;
+    transform-origin:center bottom; transform:perspective(560px) rotateX(60deg);
+    border-radius:10px; background:#2a2733; box-shadow:0 8px 12px rgba(0,0,0,.34), inset 0 0 0 2px rgba(255,255,255,.05); }
+  .mouse { position:absolute; left:69.5%; bottom:2px; width:22px; height:34px; z-index:12;
+    transform-origin:center bottom; transform:perspective(560px) rotateX(60deg);
+    border-radius:50% 50% 46% 46% / 62% 62% 38% 38%; background:linear-gradient(180deg,#eeebF3,#cbc6d4);
+    box-shadow:0 7px 11px rgba(0,0,0,.42); }
+  .mouse::before { content:""; position:absolute; top:5px; left:50%; transform:translateX(-50%); width:2px; height:11px; background:#a7a2b5; border-radius:2px; }
+  @media (max-width:640px){ .mousepad,.mouse{ display:none; } }
+
+  /* ---- string lights ---- */
+  .lights { position:absolute; top:2%; left:0; width:100%; height:8%; z-index:6; pointer-events:none; }
+  .lights .wire { position:absolute; top:6px; left:0; width:100%; height:40px; border-top:2px solid rgba(20,12,16,.4); border-radius:0 0 46% 46%/0 0 100% 100%; }
+  .lights i { position:absolute; top:14px; width:8px; height:11px; border-radius:50%; background:#ffd27a;
+    box-shadow:0 0 9px 3px rgba(255,205,120,.8); animation:twinkle 2.6s ease-in-out infinite; }
+  @keyframes twinkle { 0%,100%{opacity:.55} 50%{opacity:1} }
+
+  /* ---- rug ---- */
+  .rug { position:absolute; left:50%; bottom:2%; transform:translateX(-50%); width:74%; height:11%;
+    background:radial-gradient(closest-side, #b56b72 0%, #a85e69 60%, #8f4e5c 78%, transparent 80%); border-radius:50%;
+    box-shadow:inset 0 0 0 6px rgba(255,255,255,.08); }
+
+  /* ---- desk ---- */
+  .desk { position:absolute; left:8%; right:8%; bottom:16%; height:9%; z-index:8;
+    background:linear-gradient(180deg,#8a663f 0%, #7a5836 55%, #6a4c2d 100%);
+    border-radius:6px; box-shadow:0 18px 40px rgba(0,0,0,.4);
+    background-image:repeating-linear-gradient(90deg, rgba(0,0,0,.045) 0 3px, transparent 3px 30px); }
+  .desk::before { content:""; position:absolute; left:0; right:0; top:0; height:32%; background:linear-gradient(rgba(255,240,210,.22),transparent); border-radius:6px 6px 0 0; }
+  .leg { position:absolute; bottom:calc(16% - 8%); width:2.4%; height:9%; background:linear-gradient(#6a4c2d,#54391f); z-index:7; }
+  .leg.l { left:12%; } .leg.r { right:12%; }
+
+  /* things sit on the desk (top edge ~ bottom:25%) */
+  .on-desk { position:absolute; left:0; right:0; bottom:25%; height:0; z-index:9; }
+
+  /* ---- desk lamp (left) — SVG ---- */
+  .lamp { position:absolute; left:11%; bottom:-2px; width:150px; z-index:9; }
+  .lamp svg { width:100%; height:auto; display:block; overflow:visible; }
+
+  /* ---- coffee mug (right) ---- */
+  .mug { position:absolute; left:79%; bottom:0; display:none; }
+  .mug.show { display:block; animation:pop .4s ease; }
+  @keyframes pop { 0%{transform:scale(.5);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+  .mug .cup { position:absolute; bottom:0; right:0; width:38px; height:34px; border-radius:6px 6px 10px 10px;
+    background:linear-gradient(90deg,#e7ded2 0%,#fff 30%,#cfc4b4 100%); box-shadow:0 4px 8px rgba(0,0,0,.3); }
+  .mug .cup::before { content:""; position:absolute; top:5px; left:5px; right:5px; height:7px; border-radius:50%; background:#3a2415; box-shadow:inset 0 2px 3px rgba(0,0,0,.5); }
+  .mug .handle { position:absolute; bottom:8px; right:-9px; width:16px; height:18px; border:5px solid #d9cfc0; border-left:none; border-radius:0 12px 12px 0; }
+  .mug .steam { position:absolute; bottom:34px; width:5px; height:26px; border-radius:3px; background:linear-gradient(rgba(255,255,255,.6),rgba(255,255,255,0)); filter:blur(2px); animation:steam 3s ease-in-out infinite; }
+  .mug .steam.a { right:22px; } .mug .steam.b { right:12px; animation-delay:1.2s; }
+  @keyframes steam { 0%{opacity:0; transform:translateY(6px) scaleY(.8)} 45%{opacity:.8} 100%{opacity:0; transform:translateY(-14px) scaleY(1.2)} }
+
+  /* ---- book stack (right, further) ---- */
+  .books { position:absolute; left:26%; bottom:0; width:52px; }
+  .books i { position:absolute; right:0; height:8px; border-radius:2px; box-shadow:0 2px 3px rgba(0,0,0,.25); }
+  .books .b1 { bottom:0; width:56px; background:#b5654a; }
+  .books .b2 { bottom:9px; width:48px; right:3px; background:#4a7a8c; }
+  .books .b3 { bottom:18px; width:52px; right:1px; background:#c9a24a; }
+
+  /* ---- potted plant (far right) ---- */
+  .pot { position:absolute; left:85%; bottom:0; width:70px; z-index:9; }
+  .pot svg { width:100%; height:auto; display:block; }
+
+  /* ---- monitor (center, clickable) ---- */
+  .monitor { position:absolute; left:50%; bottom:50px; transform:translateX(-50%); width:min(46%,440px); cursor:pointer; z-index:10;
+    transition:transform .25s; }
+  .monitor:hover { transform:translateX(-50%) translateY(-5px); }
+  .monitor:hover .screen { box-shadow:0 0 40px rgba(126,231,135,.5), inset 0 0 50px rgba(0,0,0,.6); }
+  .bezel { position:relative; width:100%; background:linear-gradient(#20242c,#171a20); border:7px solid #1c1f26; border-radius:14px;
+    padding:14px 15px 24px; box-shadow:0 26px 46px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06), inset 0 0 0 1px rgba(0,0,0,.5); }
+  .bezel::before { content:""; position:absolute; top:4px; left:50%; transform:translateX(-50%); width:5px; height:5px; border-radius:50%;
+    background:#0a0d12; box-shadow:0 0 0 2px rgba(255,255,255,.05); }
+  .bezel::after { content:""; position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:30px; height:4px; border-radius:2px;
+    background:#2c313b; box-shadow:14px 0 0 -1px rgba(126,231,135,.7); }
+  .screen { position:relative; border-radius:4px; min-height:150px; overflow:hidden; padding:18px 20px; font-family:inherit;
+    background:linear-gradient(160deg,#111a2b,#080b12); box-shadow:0 0 26px rgba(126,231,135,.18), inset 0 0 60px rgba(0,0,0,.7); }
+  .screen::before { content:""; position:absolute; inset:0; background:repeating-linear-gradient(rgba(255,255,255,.028) 0 2px, transparent 2px 4px); pointer-events:none; }
+  .screen::after { content:""; position:absolute; top:-45%; left:-25%; width:55%; height:190%; transform:rotate(20deg);
+    background:linear-gradient(90deg, rgba(255,255,255,.07), transparent); pointer-events:none; }
+  .screen .m1 { color:#7ee787; font-size:13.5px; } .screen .m1 b{ color:#e6edf3; }
+  .screen .m2 { color:#58a6ff; font-size:24px; font-weight:700; margin:6px 0 3px; }
+  .screen .m2 span { color:#8b949e; font-weight:400; }
+  .screen .m3 { color:#adbac7; font-size:12.5px; margin-top:12px; }
+  .screen .cta-line { color:#ffbd2e; font-size:12.5px; margin-top:16px; }
+  .screen .bk { display:inline-block; width:8px; height:14px; background:#7ee787; vertical-align:middle; margin-left:3px; animation:blink 1s steps(2) infinite; }
+  .neck { position:absolute; left:50%; bottom:-48px; transform:translateX(-50%); width:20px; height:50px;
+    background:linear-gradient(90deg,#171a20 0%, #2e343e 45%, #363d48 55%, #171a20 100%); border-radius:3px; }
+  .foot { position:absolute; left:50%; bottom:-56px; transform:translateX(-50%); width:150px; height:20px;
+    border-radius:50%; background:radial-gradient(ellipse at 50% 32%, #363d48 0%, #23282f 55%, #12151a 100%);
+    box-shadow:0 10px 16px rgba(0,0,0,.5); }
+
+  .desk-cap { position:absolute; left:50%; bottom:3.5%; transform:translateX(-50%); z-index:41; white-space:nowrap;
+    color:#f4e6d0; font-size:13.5px; letter-spacing:.02em; background:rgba(0,0,0,.28); padding:7px 16px; border-radius:20px; backdrop-filter:blur(3px); }
+  @media (max-width:640px){ .desk-cap{ font-size:11.5px; } .screen{ min-height:120px; } }
+  .bar { background:#21262d; padding:11px 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #30363d; }
+  .dot { width:13px; height:13px; border-radius:50%; cursor:pointer; }
+  .red{background:#ff5f56} .yellow{background:#ffbd2e} .green{background:#27c93f}
+  .title { margin-left:12px; color:#8b949e; font-size:13px; }
+  .body { padding:24px 26px; height:80vh; overflow-y:auto; cursor:text; }
+  .body::-webkit-scrollbar { width:9px; } .body::-webkit-scrollbar-thumb { background:#30363d; border-radius:6px; }
+  .term.expanded .body { height:86vh; }
+  .line { margin-bottom:3px; white-space:pre-wrap; word-break:break-word; }
+  .prompt { color:#7ee787; } .path { color:#58a6ff; } .cmd { color:#e6edf3; }
+  .out { color:#adbac7; margin:2px 0 12px; }
+  .out a { color:#58a6ff; text-decoration:none; } .out a:hover { text-decoration:underline; }
+  .key { color:#d2a8ff; } .val { color:#a5d6ff; } .comment { color:#6e7681; } .hint { color:#ffbd2e; }
+  .err { color:#ff7b72; }
+  .rhead { color:#7ee787; margin-bottom:4px; }
+  .job { margin:4px 0 14px; padding-left:14px; border-left:2px solid #30363d; }
+  .job .role { color:#e6edf3; font-weight:600; } .job .co { color:#58a6ff; } .job .when { color:#6e7681; font-size:12.5px; }
+  .job ul { margin:6px 0 0 18px; color:#adbac7; } .job li { margin-bottom:3px; }
+  .skills { display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 8px; }
+  .chip { background:#21262d; border:1px solid #30363d; border-radius:6px; padding:3px 10px; color:#a5d6ff; font-size:12.5px; }
+  .grp { color:#d2a8ff; margin:8px 0 2px; }
+  /* input line */
+  .inputline { display:flex; align-items:center; }
+  .inputline .il-prompt { color:#7ee787; white-space:pre; }
+  #cmdInput { flex:1; background:transparent; border:none; outline:none; color:#e6edf3;
+    font-family:inherit; font-size:14.5px; caret-color:#7ee787; padding-left:6px; }
+  .files { color:#79c0ff; }
+</style>
+</head>
+<body>
+  <div id="desk">
+    <div class="room">
+      <div class="wall"></div>
+      <div class="floor"></div>
+
+      <!-- string lights -->
+      <div class="lights">
+        <div class="wire"></div>
+        <i style="left:6%"></i><i style="left:16%;animation-delay:.3s"></i><i style="left:26%;animation-delay:.6s"></i>
+        <i style="left:38%;animation-delay:.9s"></i><i style="left:50%;animation-delay:1.2s"></i>
+        <i style="left:62%;animation-delay:.5s"></i><i style="left:74%;animation-delay:.8s"></i>
+        <i style="left:86%;animation-delay:1.1s"></i><i style="left:94%;animation-delay:.2s"></i>
+      </div>
+
+      <!-- window -->
+      <div class="win">
+        <div class="win-glass">
+          <div class="win-sun"></div>
+          <div class="win-hill"></div>
+          <div class="win-hill two"></div>
+        </div>
+        <div class="win-bar-v"></div>
+        <div class="win-bar-h"></div>
+      </div>
+
+      <!-- hanging plant -->
+      <div class="hangplant">
+        <svg viewBox="0 0 140 180" xmlns="http://www.w3.org/2000/svg">
+          <!-- hanger cords -->
+          <path d="M70 0 L46 60 M70 0 L94 60 M70 0 L70 58" stroke="#7a6a52" stroke-width="1.6" fill="none"/>
+          <!-- foliage mound behind pot -->
+          <ellipse cx="70" cy="56" rx="36" ry="16" fill="#5f8f5b"/>
+          <ellipse cx="52" cy="52" rx="16" ry="12" fill="#6b9e63"/>
+          <ellipse cx="88" cy="52" rx="16" ry="12" fill="#557f52"/>
+          <!-- pot -->
+          <path d="M44 58 L96 58 L88 90 Q70 98 52 90 Z" fill="#c98a5e"/>
+          <rect x="42" y="54" width="56" height="9" rx="4" fill="#d99a6c"/>
+          <!-- trailing vines -->
+          <path d="M58 90 Q48 120 54 152 Q56 166 50 178" stroke="#4f7a4a" stroke-width="2.6" fill="none"/>
+          <path d="M82 90 Q92 124 85 156 Q83 168 89 178" stroke="#4f7a4a" stroke-width="2.6" fill="none"/>
+          <path d="M70 92 Q70 130 72 170" stroke="#4f7a4a" stroke-width="2.6" fill="none"/>
+          <g fill="#5f9a56">
+            <ellipse cx="51" cy="112" rx="6" ry="3.4" transform="rotate(40 51 112)"/>
+            <ellipse cx="56" cy="140" rx="6" ry="3.4" transform="rotate(-28 56 140)"/>
+            <ellipse cx="88" cy="118" rx="6" ry="3.4" transform="rotate(-40 88 118)"/>
+            <ellipse cx="84" cy="146" rx="6" ry="3.4" transform="rotate(32 84 146)"/>
+            <ellipse cx="71" cy="126" rx="6" ry="3.4" transform="rotate(8 71 126)"/>
+            <ellipse cx="72" cy="156" rx="6" ry="3.4" transform="rotate(-12 72 156)"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- movie poster -->
+      <div class="poster">
+        <div class="p-sky"></div>
+        <div class="p-sun"></div>
+        <div class="p-mtn"></div>
+        <div class="p-strip t"></div>
+        <div class="p-strip b"></div>
+        <div class="p-title">NOW SHOWING</div>
+      </div>
+
+      <!-- wall shelf with framed photo + books resting on it -->
+      <div class="shelf">
+        <div class="items">
+          <div class="frame"><div class="frame-art"></div></div>
+          <div class="mini-books">
+            <i style="height:34px;background:#b5654a"></i><i style="height:46px;background:#4a7a8c"></i>
+            <i style="height:28px;background:#c9a24a"></i><i style="height:40px;background:#7a6b9c"></i>
+          </div>
+        </div>
+        <div class="plank"></div>
+        <div class="bracket l"></div><div class="bracket r"></div>
+      </div>
+
+      <!-- rug + desk -->
+      <div class="rug"></div>
+      <div class="leg l"></div><div class="leg r"></div>
+      <div class="desk"></div>
+
+      <!-- items on the desk -->
+      <div class="on-desk">
+        <div class="lamp">
+          <svg viewBox="0 0 190 230" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="lampMetal" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#161a20"/><stop offset=".5" stop-color="#49515e"/><stop offset="1" stop-color="#161a20"/>
+              </linearGradient>
+              <radialGradient id="lampGlow" cx="50%" cy="40%" r="60%">
+                <stop offset="0" stop-color="#ffe6ad" stop-opacity=".9"/><stop offset="100%" stop-color="#ffe6ad" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <!-- light spilling down onto the desk -->
+            <polygon points="104,150 150,150 176,232 78,232" fill="url(#lampGlow)" opacity=".5"/>
+            <!-- base -->
+            <ellipse cx="58" cy="214" rx="46" ry="12" fill="#20242c"/>
+            <ellipse cx="58" cy="210" rx="40" ry="9" fill="#2b313b"/>
+            <!-- pole + gooseneck -->
+            <path d="M58 206 L58 84 Q58 48 96 48 Q128 48 128 98" fill="none" stroke="url(#lampMetal)" stroke-width="9" stroke-linecap="round"/>
+            <circle cx="58" cy="84" r="6.5" fill="#3f4854"/>
+            <!-- glow behind shade -->
+            <circle cx="128" cy="140" r="24" fill="url(#lampGlow)" opacity=".8"/>
+            <!-- shade (bell pointing down) -->
+            <path d="M101 100 L155 100 L142 134 Q128 144 114 134 Z" fill="url(#lampMetal)"/>
+            <path d="M99 100 L157 100" stroke="#5b6675" stroke-width="5" stroke-linecap="round"/>
+            <!-- bulb -->
+            <circle cx="128" cy="132" r="7" fill="#fff3c8"/>
+          </svg>
+        </div>
+
+        <div class="monitor" onclick="enterTerminal()" title="click to enter">
+          <div class="bezel">
+            <div class="screen">
+              <div class="m1">$ <b>whoami</b></div>
+              <div class="m2">saindhavi<span>.dev</span></div>
+              <div class="m1">Software Engineer · Computer Engineering @ Waterloo</div>
+              <div class="m3">An interactive terminal résumé lives on this screen.</div>
+              <div class="cta-line">▸ click the monitor to boot it up<span class="bk"></span></div>
+            </div>
+          </div>
+          <div class="neck"></div>
+          <div class="foot"></div>
+        </div>
+
+        <div class="keyboard"></div>
+        <div class="mousepad"></div>
+        <div class="mouse"></div>
+
+        <div class="mug">
+          <div class="steam a"></div><div class="steam b"></div>
+          <div class="cup"></div><div class="handle"></div>
+        </div>
+
+        <div class="books"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+
+        <div class="pot">
+          <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- leaves -->
+            <g stroke="#3f6b40" stroke-width="1">
+              <path d="M50 78 Q34 44 26 24 Q46 40 52 76 Z" fill="#5f9a56"/>
+              <path d="M50 78 Q66 42 76 24 Q56 42 48 76 Z" fill="#6ba85f"/>
+              <path d="M50 76 Q50 36 50 18 Q56 40 53 76 Z" fill="#72b064"/>
+              <path d="M50 80 Q28 58 16 50 Q40 60 50 80 Z" fill="#557f52"/>
+              <path d="M50 80 Q72 58 84 52 Q60 62 50 80 Z" fill="#5f9a56"/>
+            </g>
+            <!-- pot -->
+            <path d="M28 78 L72 78 L66 110 Q50 116 34 110 Z" fill="#c98a5e"/>
+            <rect x="26" y="74" width="48" height="9" rx="4" fill="#d99a6c"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="desk-cap">Welcome to my desk — click the screen to explore my résumé</div>
+  </div>
+
+  <div class="term enter-hidden" id="term">
+    <div class="bar">
+      <span class="dot red"></span><span class="dot yellow"></span>
+      <span class="dot green" title="expand" onclick="toggleExpand()"></span>
+      <span class="title">saindhavi@dev: ~/resume</span>
+      <span class="deskbtn" onclick="exitTerminal()">⤲ back to desk</span>
+    </div>
+    <div class="body" id="body" onclick="focusInput()">
+      <div class="out">Welcome to <span class="val">saindhavi.dev</span> — interactive résumé shell.
+Type <span class="hint">help</span> to see available commands. Try <span class="hint">about</span>, <span class="hint">experience</span>, or play a <span class="hint">game</span> / <span class="hint">quiz</span>.</div>
+      <div class="inputline" id="inputline">
+        <span class="il-prompt">➜ ~ </span>
+        <input id="cmdInput" autocomplete="off" autofocus spellcheck="false" />
+      </div>
+    </div>
+  </div>
+
+<script>
+const contact = {
+  email: 'sthevath@uwaterloo.ca', phone: '416-875-1719',
+  linkedin: 'linkedin.com/in/saindhavi', github: 'github.com/saindhavi1'
+};
+const S = {}; // section HTML
+
+S.about = `<div class="out">Saindhavi Thevathasan — Computer Engineering @ University of Waterloo.
+I build reliable backend systems and developer tooling: from Ruby on Rails data
+migrations and BigQuery pipelines at Shopify to STM32 firmware written in C.
+Three SWE internships. Currently open to new-grad software roles.</div>`;
+
+S.experience = `<div class="rhead">## experience</div>
+  <div class="job"><div><span class="role">Software Engineering Intern</span> · <span class="co">Shopify</span> <span class="when">— May 2026 – Aug 2026 · Toronto</span></div>
+    <ul><li>Led a Shopify Taxes migration from legacy tax-partner records to a centralized config system, auditing 74 query paths and shipping dual-write, backfill, parity-check, and rollout-safety work.</li>
+    <li>Built Ruby/Rails tools to safely backfill and compare tax-partner data — dry-runs, scoped targeting, telemetry, mismatch handling.</li>
+    <li>Improved tax-filing workflows: contact lookup, Sales Tax ID validation, GraphQL access updates, maintenance-task safeguards, feature-flag cleanup.</li></ul></div>
+  <div class="job"><div><span class="role">Software Engineering Intern</span> · <span class="co">Shopify</span> <span class="when">— Sep 2025 – Dec 2025 · Toronto</span></div>
+    <ul><li>Resolved a data-redaction pipeline incident with BigQuery filtering to prevent NULL rewrites in non-PII columns — unblocking 71 tables and 100s of erasure batches.</li>
+    <li>Migrated employee data requests to a cheaper platform using Rails state machines, RSpec table-driven tests, and Flipper flags — saving $60,000.</li>
+    <li>Deprecated a DB table via ActiveRecord migrations, fixed metric collection (histogram → gauge), corrected Shop Purge SLA timestamps.</li></ul></div>
+  <div class="job"><div><span class="role">Software Engineering Intern</span> · <span class="co">Powersmiths International</span> <span class="when">— Jan 2025 – Apr 2025 · Brampton</span></div>
+    <ul><li>Automated migration of historical test data into a structured database, cutting manual entry time 75%.</li>
+    <li>Automated transformer test reports (Python, Pandas, MS SQL); integrated Modbus for real-time test-bay data.</li>
+    <li>Built a UI to filter MS SQL data and update JSON in Grafana dashboards, improving analysis 85%.</li></ul></div>`;
+
+S.education = `<div class="rhead">## education</div>
+  <div class="job"><div><span class="role">BASc. Honours Computer Engineering</span> <span class="when">— Candidate</span></div>
+    <ul><li>University of Waterloo — Waterloo, ON</li></ul></div>
+  <div class="out"><span class="key">certifications</span> = React Essential Training · XML Essential Training · WHMIS 2015 · Google Kubernetes Engine</div>`;
+
+S.skills = `<div class="rhead">## skills</div>
+  <div class="grp">languages & frameworks</div>
+  <div class="skills"><span class="chip">Python</span><span class="chip">Java</span><span class="chip">C++</span><span class="chip">C</span><span class="chip">JavaScript</span><span class="chip">Ruby on Rails</span><span class="chip">Go</span><span class="chip">React</span><span class="chip">Node.js</span><span class="chip">SQL</span><span class="chip">BigQuery</span><span class="chip">Pandas</span><span class="chip">REST APIs</span><span class="chip">Modbus</span></div>
+  <div class="grp">developer tools</div>
+  <div class="skills"><span class="chip">Git</span><span class="chip">Docker</span><span class="chip">Grafana</span><span class="chip">Postman</span><span class="chip">Figma</span><span class="chip">Linux/Unix</span><span class="chip">VS Code</span></div>
+  <div class="grp">hardware</div>
+  <div class="skills"><span class="chip">STM32</span><span class="chip">Arduino</span><span class="chip">Embedded C</span><span class="chip">Soldering</span></div>`;
+
+S.projects = `<div class="rhead">## projects</div>
+  <div class="job"><div><span class="role">SenseSecure</span> <span class="comment"># synchronized smart alarm system</span></div>
+    <ul><li>Synchronized two STM32 microcontrollers over GPIO with real-time coordination and fault tolerance.</li>
+    <li>Integrated ultrasonic sensors, buttons, buzzers, LEDs for multi-modal alerts + manual override (+40% versatility).</li>
+    <li>Written in C: alerts when an object is within 30 cm, disarmed via button press.</li></ul></div>
+  <div class="job"><div><span class="role">Dual Axis Solar Panel</span> <span class="comment"># light-tracking rig · 🏆 1st place hackathon</span></div>
+    <ul><li>Algorithm orients a panel toward light to maximize energy capture.</li>
+    <li>Built with LDR sensors + servo motors; full circuit simulated in AutoCAD.</li>
+    <li>Won first place at Kids for Kids Toronto's GenZ Can Hack Hackathon.</li></ul></div>`;
+
+S.contact = `<div class="out"><span class="key">email</span>     = <a href="mailto:${contact.email}">${contact.email}</a>
+<span class="key">phone</span>     = ${contact.phone}
+<span class="key">linkedin</span>  = <a href="https://${contact.linkedin}">${contact.linkedin}</a>
+<span class="key">github</span>    = <a href="https://${contact.github}">${contact.github}</a></div>`;
+
+const FILES = ['about.txt','experience.log','education.txt','skills/','projects/','contact.card','resume.pdf'];
+
+const help = `<div class="out">Available commands:
+  <span class="hint">about</span>         who I am
+  <span class="hint">experience</span>    work history        <span class="comment">(alias: exp, work)</span>
+  <span class="hint">education</span>     school + certs      <span class="comment">(alias: edu)</span>
+  <span class="hint">skills</span>        tech stack
+  <span class="hint">projects</span>      things I've built   <span class="comment">(alias: proj)</span>
+  <span class="hint">contact</span>       how to reach me
+  <span class="hint">ls</span>            list files
+  <span class="hint">cat</span> [file]    print a file, e.g. <span class="comment">cat about.txt</span>
+  <span class="hint">open</span> [x]      open linkedin / github / resume / email
+  <span class="hint">all</span>           print the whole résumé
+  <span class="hint">clear</span>         clear the screen        <span class="comment">(alias: cls)</span>
+  <span class="hint">help</span>          this menu
+
+<span class="key">Fun stuff:</span>
+  <span class="hint">game</span>          play a number-guessing game
+  <span class="hint">quiz</span>          résumé trivia (6 questions)
+  <span class="hint">neofetch</span>      system-info style banner
+  <span class="hint">theme</span> [x]     recolor: green · amber · ocean · grape
+  <span class="hint">matrix</span>        enter the matrix
+  <span class="hint">coffee</span>        ☕
+
+Tips: ↑/↓ for history · Tab to autocomplete.</div>`;
+
+const order = ['about','experience','education','skills','projects','contact'];
+const history = []; let hix = -1;
+
+// ---- interactive mode state ----
+let mode = null;              // null | 'guess' | 'quiz'
+let secret = 0, tries = 0;   // number-guess game
+let qi = 0, score = 0;       // quiz game
+
+const quiz = [
+  { q: 'Which university does Saindhavi attend?', a:['waterloo','university of waterloo','uwaterloo'], hint:'starts with W' },
+  { q: 'How many SWE internships has she completed?', a:['3','three'], hint:'a small number' },
+  { q: 'Which company did she intern at twice?', a:['shopify'], hint:'green bag logo' },
+  { q: 'How much money did her platform migration save? (in $)', a:['60000','60,000','60k','$60,000','$60k'], hint:'five figures' },
+  { q: 'Which microcontroller powers the SenseSecure project?', a:['stm32','stm-32'], hint:'ST + a number' },
+  { q: 'Her hardware project won 1st place at which kind of event?', a:['hackathon','genz can hack','hack'], hint:'a coding competition' }
+];
+
+function startGuess(){
+  mode='guess'; secret=Math.floor(Math.random()*100)+1; tries=0;
+  print('<div class="out">🎯 <b>Number Guess</b> — I\'m thinking of a number between 1 and 100.\nType a guess and press Enter. Type <span class="hint">q</span> to quit.</div>');
+}
+function handleGuess(v){
+  if(v.toLowerCase()==='q'){ mode=null; print(`<div class="out">Game over. The number was <b>${secret}</b>.</div>`); return; }
+  const n=parseInt(v,10);
+  if(isNaN(n)){ print('<div class="out err">Enter a number, or q to quit.</div>'); return; }
+  tries++;
+  if(n===secret){ print(`<div class="out">🎉 Correct! You got it in <b>${tries}</b> ${tries===1?'try':'tries'}. Nicely done.</div>`); mode=null; }
+  else if(n<secret) print('<div class="out">🔼 Too low. Try higher.</div>');
+  else print('<div class="out">🔽 Too high. Try lower.</div>');
+}
+
+function startQuiz(){
+  mode='quiz'; qi=0; score=0;
+  print('<div class="out">🧠 <b>Résumé Trivia</b> — answer 6 questions about Saindhavi.\nType <span class="hint">q</span> to quit, or <span class="hint">?</span> for a hint.</div>');
+  askQuiz();
+}
+function askQuiz(){ print(`<div class="out"><span class="key">Q${qi+1}/${quiz.length}:</span> ${quiz[qi].q}</div>`); }
+function handleQuiz(v){
+  const t=v.trim().toLowerCase();
+  if(t==='q'){ mode=null; print(`<div class="out">Quiz ended. Score: <b>${score}/${qi}</b>.</div>`); return; }
+  if(t==='?'){ print(`<div class="out comment">Hint: ${quiz[qi].hint}</div>`); return; }
+  const correct = quiz[qi].a.some(a=>t.includes(a));
+  if(correct){ score++; print('<div class="out">✅ Correct!</div>'); }
+  else print(`<div class="out err">❌ Not quite — answer: <b>${quiz[qi].a[0]}</b></div>`);
+  qi++;
+  if(qi<quiz.length){ askQuiz(); }
+  else {
+    mode=null;
+    let msg = score===quiz.length ? 'Perfect score! You really know your stuff. 🏆'
+      : score>=quiz.length/2 ? 'Nice work! 👏' : 'Give it another go with <span class="hint">quiz</span>!';
+    print(`<div class="out">Final score: <b>${score}/${quiz.length}</b>. ${msg}</div>`);
+  }
+}
+
+function neofetch(){
+  print(`<div class="out" style="display:flex;gap:20px;flex-wrap:wrap">
+<pre style="color:#7ee787;margin:0">   _____ _______
+  / ____|__   __|
+ | (___    | |     saindhavi@dev
+  \\___ \\   | |     ---------------
+  ____) |  | |     OS: ResumeOS 2026
+ |_____/   |_|     Shell: sh-resume
+</pre>
+<div style="align-self:center">
+<span class="key">User</span>: Saindhavi Thevathasan
+<span class="key">Role</span>: Software Engineer
+<span class="key">School</span>: University of Waterloo
+<span class="key">Interns</span>: Shopify ×2, Powersmiths
+<span class="key">Langs</span>: Python, C/C++, Ruby, Go, JS
+<span class="key">Uptime</span>: caffeinated ☕
+</div></div>`);
+}
+
+// insert a live element before the input line and return it
+function liveBlock(cls){
+  const div=document.createElement('div'); div.className=cls||'out';
+  document.getElementById('body').insertBefore(div, document.getElementById('inputline'));
+  return div;
+}
+
+function matrix(){
+  const box=liveBlock('out'); box.style.color='#39d353'; box.style.fontSize='12px'; box.style.lineHeight='1.3';
+  const pre=document.createElement('pre'); pre.style.margin='0'; box.appendChild(pre);
+  const cols=46, rows=9; const chars='01アカサタナ<>[]{}#$%&*+=/\\|';
+  let frame=0; const maxFrames=18;
+  const id=setInterval(()=>{
+    let out='';
+    for(let r=0;r<rows;r++){ let line=''; for(let c=0;c<cols;c++){ line+=chars[Math.floor(Math.random()*chars.length)]; } out+=line+'\n'; }
+    pre.textContent=out; frame++; scrollBottom();
+    if(frame>=maxFrames){ clearInterval(id); pre.textContent='Wake up, Saindhavi… 🐇\nThe résumé has you. Follow the green cursor.'; scrollBottom(); }
+  }, 85);
+}
+
+function brewCoffee(){
+  const box=liveBlock('out');
+  const steps=['Grinding beans','Heating water to 94°C','Blooming grounds','Pouring — slow spiral'];
+  let i=0;
+  const id=setInterval(()=>{
+    const filled='█'.repeat(i+1), empty='░'.repeat(steps.length-i-1);
+    box.innerHTML=`<span class="comment">[${filled}${empty}]</span> ${steps[i]}…`;
+    i++; scrollBottom();
+    if(i>=steps.length){
+      clearInterval(id);
+      box.innerHTML=`<pre style="margin:0;color:#d2a8ff">      ) )\n     ( (\n    ........\n    |      |]\n    \\      /   ☕ Fresh coffee, ready.\n     \`----'    Left a mug on the desk — exit to see it. → try <span class="hint">quiz</span></pre>`;
+      try { localStorage.setItem('coffeeBrewed','1'); } catch(e){}
+      revealMug();
+      scrollBottom();
+    }
+  }, 480);
+}
+
+const themes = {
+  green:  { bg:'#0d1117', p:'#7ee787' },
+  amber:  { bg:'#1a1400', p:'#ffb000' },
+  ocean:  { bg:'#04141f', p:'#5fd0ff' },
+  grape:  { bg:'#14091f', p:'#d2a8ff' }
+};
+function setTheme(name){
+  const t=themes[name];
+  if(!t){ print(`<div class="out err">theme: unknown '${name}'. Try: ${Object.keys(themes).join(', ')}</div>`); return; }
+  document.body.style.background=t.bg;
+  document.querySelector('.term').style.background=t.bg;
+  document.querySelectorAll('.prompt,.il-prompt,.cursor').forEach(el=>el.style.color=t.p);
+  document.querySelectorAll('.cursor').forEach(el=>el.style.background=t.p);
+  print(`<div class="out">Theme set to <b>${name}</b>. 🎨</div>`);
+}
+
+function print(html){
+  const line = document.createElement('div');
+  line.innerHTML = html;
+  document.getElementById('body').insertBefore(line, document.getElementById('inputline'));
+}
+function echo(cmd){ print(`<div class="line"><span class="prompt">➜</span> <span class="path">~</span> <span class="cmd">${cmd}</span></div>`); }
+function scrollBottom(){ const b=document.getElementById('body'); b.scrollTop=b.scrollHeight; }
+function focusInput(){ document.getElementById('cmdInput').focus(); }
+function toggleExpand(){ document.getElementById('term').classList.toggle('expanded'); }
+function revealMug(){ const m=document.querySelector('.mug'); if(m) m.classList.add('show'); }
+function enterTerminal(){
+  document.getElementById('desk').classList.add('gone');
+  document.getElementById('term').classList.remove('enter-hidden');
+  setTimeout(focusInput, 350);
+}
+function exitTerminal(){
+  document.getElementById('term').classList.add('enter-hidden');
+  document.getElementById('desk').classList.remove('gone');
+}
+
+
+function openLink(what){
+  const map = { linkedin:'https://'+contact.linkedin, github:'https://'+contact.github,
+    resume:'#', email:'mailto:'+contact.email };
+  if(map[what]){ print(`<div class="out">Opening ${what}… <a href="${map[what]}">${map[what].replace('mailto:','')}</a></div>`); window.open(map[what],'_blank'); }
+  else print(`<div class="out err">open: unknown target '${what}'. Try: linkedin, github, resume, email.</div>`);
+}
+
+function handle(raw){
+  const input = raw.trim();
+  if(!input){ return; }
+  echo(input);
+  history.unshift(input); hix = -1;
+  const [c, ...args] = input.split(/\s+/);
+  const cmd = c.toLowerCase();
+  const arg = (args[0]||'').toLowerCase();
+
+  switch(cmd){
+    case 'help': case '?': case 'man': print(help); break;
+    case 'about': case 'whoami': print(S.about); break;
+    case 'experience': case 'exp': case 'work': print(S.experience); break;
+    case 'education': case 'edu': print(S.education); break;
+    case 'skills': case 'stack': print(S.skills); break;
+    case 'projects': case 'proj': print(S.projects); break;
+    case 'contact': print(S.contact); break;
+    case 'ls': case 'dir': print(`<div class="out files">${FILES.join('   ')}</div>`); break;
+    case 'all': case './resume': order.forEach(k=>print(S[k])); break;
+    case 'open': case 'xdg-open': openLink(arg); break;
+    case 'clear': case 'cls':
+      const body=document.getElementById('body');
+      [...body.querySelectorAll('div')].forEach(d=>{ if(d.id!=='inputline') d.remove(); });
+      break;
+    case 'cat':
+      if(!arg){ print('<div class="out err">cat: missing file operand. Try: cat about.txt</div>'); break; }
+      if(arg.startsWith('about')) print(S.about);
+      else if(arg.startsWith('experience')) print(S.experience);
+      else if(arg.startsWith('education')) print(S.education);
+      else if(arg.startsWith('skills')) print(S.skills);
+      else if(arg.startsWith('projects')) print(S.projects);
+      else if(arg.startsWith('contact')) print(S.contact);
+      else if(arg.startsWith('resume')) { print('<div class="out">resume.pdf is a binary file. Try <span class="hint">open resume</span>.</div>'); }
+      else print(`<div class="out err">cat: ${arg}: No such file. Try 'ls'.</div>`);
+      break;
+    case 'game': case 'guess': startGuess(); break;
+    case 'quiz': case 'trivia': startQuiz(); break;
+    case 'neofetch': case 'fetch': neofetch(); break;
+    case 'matrix': matrix(); break;
+    case 'theme': setTheme(arg); break;
+    case 'history': print(`<div class="out">${history.slice().reverse().map((h,i)=>`${i+1}  ${h}`).join('<br>')||'(empty)'}</div>`); break;
+    case 'coffee': brewCoffee(); break;
+    case 'sudo': print('<div class="out">Nice try. 😄  (try <span class="hint">game</span> or <span class="hint">quiz</span> instead)</div>'); break;
+    case 'echo': print(`<div class="out">${args.join(' ')}</div>`); break;
+    case 'pwd': print('<div class="out">/home/saindhavi/resume</div>'); break;
+    case 'date': print(`<div class="out">${new Date().toString()}</div>`); break;
+    default: print(`<div class="out err">command not found: ${cmd}. Type <span class="hint">help</span>.</div>`);
+  }
+  scrollBottom();
+}
+
+const inp = document.getElementById('cmdInput');
+inp.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    const v=inp.value; inp.value='';
+    if(mode==='guess'){ echo(v); history.unshift(v); handleGuess(v); scrollBottom(); }
+    else if(mode==='quiz'){ echo(v); history.unshift(v); handleQuiz(v); scrollBottom(); }
+    else handle(v);
+  }
+  else if(e.key==='ArrowUp'){ if(history.length){ hix=Math.min(hix+1,history.length-1); inp.value=history[hix]; e.preventDefault(); } }
+  else if(e.key==='ArrowDown'){ if(hix>0){ hix--; inp.value=history[hix]; } else { hix=-1; inp.value=''; } e.preventDefault(); }
+  else if(e.key==='Tab'){
+    e.preventDefault();
+    const cmds=['about','experience','education','skills','projects','contact','ls','cat','open','all','clear','help','game','quiz','neofetch','theme','matrix','coffee'];
+    const m=cmds.filter(x=>x.startsWith(inp.value.toLowerCase()));
+    if(m.length===1) inp.value=m[0];
+    else if(m.length>1) print(`<div class="out comment">${m.join('   ')}</div>`), scrollBottom();
+  }
+});
+window.addEventListener('click', ()=>{}); // keep default
+focusInput();
+try { if(localStorage.getItem('coffeeBrewed')) revealMug(); } catch(e){}
+</script>
+</body>
+</html>
