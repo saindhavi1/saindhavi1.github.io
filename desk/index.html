@@ -168,7 +168,7 @@
   .books .b3 { bottom:18px; width:52px; right:1px; background:#c9a24a; }
 
   /* ---- potted plant (far right) ---- */
-  .pot { position:absolute; left:85%; bottom:0; width:70px; z-index:9; }
+  .pot { position:absolute; left:85%; bottom:-10px; width:70px; z-index:9; }
   .pot svg { width:100%; height:auto; display:block; }
 
   /* ---- monitor (center, clickable) ---- */
@@ -206,14 +206,12 @@
   /* ---- ambient idle motion ---- */
   .hangplant svg { animation: sway 6.5s ease-in-out infinite; transform-origin:top center; }
   @keyframes sway { 0%,100%{ transform:rotate(-2.6deg); } 50%{ transform:rotate(2.6deg); } }
-  .pot svg { animation: potsway 7.5s ease-in-out infinite; transform-origin:bottom center; }
-  @keyframes potsway { 0%,100%{ transform:rotate(-1.6deg); } 50%{ transform:rotate(1.6deg); } }
   .lamp svg { animation: lampbreath 5.5s ease-in-out infinite; }
   @keyframes lampbreath { 0%,100%{ filter:brightness(1); } 50%{ filter:brightness(1.13); } }
   .win-sun { animation: sunpulse 6s ease-in-out infinite; }
   @keyframes sunpulse { 0%,100%{ box-shadow:0 0 34px rgba(255,210,130,.9); } 50%{ box-shadow:0 0 52px rgba(255,225,150,1); } }
   @media (prefers-reduced-motion: reduce){
-    .hangplant svg, .pot svg, .lamp svg, .win-sun, .lights i, .mug .steam, .win-birds, .win-birds .b::before, .win-birds .b::after { animation: none !important; }
+    .hangplant svg, .lamp svg, .win-sun, .lights i, .mug .steam, .win-birds, .win-birds .b::before, .win-birds .b::after { animation: none !important; }
     .win-birds { display:none !important; }
   }
   .bar { background:#21262d; padding:11px 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #30363d; }
