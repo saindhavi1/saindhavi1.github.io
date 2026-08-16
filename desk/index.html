@@ -184,6 +184,22 @@
   .desk-cap { position:absolute; left:50%; bottom:3.5%; transform:translateX(-50%); z-index:41; white-space:nowrap;
     color:#f4e6d0; font-size:13.5px; letter-spacing:.02em; background:rgba(0,0,0,.28); padding:7px 16px; border-radius:20px; backdrop-filter:blur(3px); }
   @media (max-width:640px){ .desk-cap{ font-size:11.5px; } .screen{ min-height:120px; } }
+
+  /* ---- ambient idle motion ---- */
+  .hangplant svg { animation: sway 6.5s ease-in-out infinite; transform-origin:top center; }
+  @keyframes sway { 0%,100%{ transform:rotate(-2.6deg); } 50%{ transform:rotate(2.6deg); } }
+  .pot svg { animation: potsway 7.5s ease-in-out infinite; transform-origin:bottom center; }
+  @keyframes potsway { 0%,100%{ transform:rotate(-1.6deg); } 50%{ transform:rotate(1.6deg); } }
+  .lamp svg { animation: lampbreath 5.5s ease-in-out infinite; }
+  @keyframes lampbreath { 0%,100%{ filter:brightness(1); } 50%{ filter:brightness(1.13); } }
+  .win-sun { animation: sunpulse 6s ease-in-out infinite; }
+  @keyframes sunpulse { 0%,100%{ box-shadow:0 0 34px rgba(255,210,130,.9); } 50%{ box-shadow:0 0 52px rgba(255,225,150,1); } }
+  /* parallax layers glide smoothly toward the cursor */
+  .win, .poster, .shelf, .hangplant, .lamp, .pot { transition: transform .25s ease-out; will-change: transform; }
+  @media (prefers-reduced-motion: reduce){
+    .hangplant svg, .pot svg, .lamp svg, .win-sun, .lights i, .mug .steam { animation: none !important; }
+    .win, .poster, .shelf, .hangplant, .lamp, .pot { transition: none !important; transform: none !important; }
+  }
   .bar { background:#21262d; padding:11px 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #30363d; }
   .dot { width:13px; height:13px; border-radius:50%; cursor:pointer; }
   .red{background:#ff5f56} .yellow{background:#ffbd2e} .green{background:#27c93f}
@@ -693,6 +709,28 @@ inp.addEventListener('keydown', e=>{
 window.addEventListener('click', ()=>{}); // keep default
 focusInput();
 try { if(localStorage.getItem('coffeeBrewed')) revealMug(); } catch(e){}
+
+// ---- gentle parallax: layers drift toward the cursor for a sense of depth ----
+(function(){
+  const desk = document.getElementById('desk');
+  if(!desk) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // [selector, depth px] — nearer objects move more
+  const layers = [['.win',5],['.poster',4],['.shelf',3],['.hangplant',7],['.lamp',11],['.pot',11]];
+  desk.addEventListener('mousemove', e=>{
+    const r = desk.getBoundingClientRect();
+    const dx = (e.clientX - r.left)/r.width - 0.5;
+    const dy = (e.clientY - r.top)/r.height - 0.5;
+    layers.forEach(([sel,d])=>{
+      document.querySelectorAll(sel).forEach(el=>{
+        el.style.transform = `translate(${(-dx*d).toFixed(1)}px, ${(-dy*d).toFixed(1)}px)`;
+      });
+    });
+  });
+  desk.addEventListener('mouseleave', ()=>{
+    layers.forEach(([sel])=>document.querySelectorAll(sel).forEach(el=>{ el.style.transform=''; }));
+  });
+})();
 </script>
 </body>
 </html>
