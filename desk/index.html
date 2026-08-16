@@ -47,15 +47,15 @@
     border-radius:50% 50% 0 0 / 60% 60% 0 0; }
   .win-hill.two { bottom:0; left:35%; right:-10%; height:26%; background:linear-gradient(180deg,#8a6f96,#6a577f); }
   /* a little bird glides across the window now and then */
-  .win-birds { position:absolute; left:0; top:26%; width:14px; height:10px; opacity:0; z-index:2;
+  .win-birds { position:absolute; left:0; top:26%; width:26px; height:16px; opacity:0; z-index:2;
     animation: birdFly 20s ease-in-out infinite; }
-  .win-birds .b { position:absolute; width:8px; height:8px; }
-  .win-birds .b::before, .win-birds .b::after { content:""; position:absolute; top:0; width:6px; height:6px;
-    border-top:2px solid #2f2740; border-radius:50%; }
-  .win-birds .b::before { left:-4px; transform:rotate(18deg); transform-origin:right center; animation: flap .35s ease-in-out infinite; }
-  .win-birds .b::after  { left:2px;  transform:rotate(-18deg) scaleX(-1); transform-origin:left center; animation: flap .35s ease-in-out infinite; }
-  .win-birds .b2 { left:16px; top:6px; transform:scale(.75); }
-  @keyframes flap { 0%,100%{ border-top-width:2px; height:6px; } 50%{ height:2px; } }
+  .win-birds .b { position:absolute; width:14px; height:14px; }
+  .win-birds .b::before, .win-birds .b::after { content:""; position:absolute; top:0; width:10px; height:10px;
+    border-top:3px solid #2f2740; border-radius:50%; }
+  .win-birds .b::before { left:-6px; transform:rotate(18deg); transform-origin:right center; animation: flap .35s ease-in-out infinite; }
+  .win-birds .b::after  { left:3px;  transform:rotate(-18deg) scaleX(-1); transform-origin:left center; animation: flap .35s ease-in-out infinite; }
+  .win-birds .b2 { left:24px; top:9px; transform:scale(.78); }
+  @keyframes flap { 0%,100%{ border-top-width:3px; height:10px; } 50%{ height:3px; } }
   @keyframes birdFly {
     0%   { transform: translate(-20px, 30px) scale(.7); opacity:0; }
     8%   { opacity:.85; }
@@ -212,12 +212,9 @@
   @keyframes lampbreath { 0%,100%{ filter:brightness(1); } 50%{ filter:brightness(1.13); } }
   .win-sun { animation: sunpulse 6s ease-in-out infinite; }
   @keyframes sunpulse { 0%,100%{ box-shadow:0 0 34px rgba(255,210,130,.9); } 50%{ box-shadow:0 0 52px rgba(255,225,150,1); } }
-  /* parallax layers glide smoothly toward the cursor */
-  .win, .poster, .shelf, .hangplant, .lamp, .pot { transition: transform .25s ease-out; will-change: transform; }
   @media (prefers-reduced-motion: reduce){
     .hangplant svg, .pot svg, .lamp svg, .win-sun, .lights i, .mug .steam, .win-birds, .win-birds .b::before, .win-birds .b::after { animation: none !important; }
     .win-birds { display:none !important; }
-    .win, .poster, .shelf, .hangplant, .lamp, .pot { transition: none !important; transform: none !important; }
   }
   .bar { background:#21262d; padding:11px 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #30363d; }
   .dot { width:13px; height:13px; border-radius:50%; cursor:pointer; }
@@ -730,27 +727,6 @@ window.addEventListener('click', ()=>{}); // keep default
 focusInput();
 try { if(localStorage.getItem('coffeeBrewed')) revealMug(); } catch(e){}
 
-// ---- gentle parallax: layers drift toward the cursor for a sense of depth ----
-(function(){
-  const desk = document.getElementById('desk');
-  if(!desk) return;
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  // [selector, depth px] — nearer objects move more
-  const layers = [['.win',5],['.poster',4],['.shelf',3],['.hangplant',7],['.lamp',11],['.pot',11]];
-  desk.addEventListener('mousemove', e=>{
-    const r = desk.getBoundingClientRect();
-    const dx = (e.clientX - r.left)/r.width - 0.5;
-    const dy = (e.clientY - r.top)/r.height - 0.5;
-    layers.forEach(([sel,d])=>{
-      document.querySelectorAll(sel).forEach(el=>{
-        el.style.transform = `translate(${(-dx*d).toFixed(1)}px, ${(-dy*d).toFixed(1)}px)`;
-      });
-    });
-  });
-  desk.addEventListener('mouseleave', ()=>{
-    layers.forEach(([sel])=>document.querySelectorAll(sel).forEach(el=>{ el.style.transform=''; }));
-  });
-})();
 </script>
 </body>
 </html>
