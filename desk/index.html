@@ -46,6 +46,24 @@
   .win-hill { position:absolute; left:0; right:0; bottom:0; height:34%; background:linear-gradient(180deg,#7d6a9a,#5c527e);
     border-radius:50% 50% 0 0 / 60% 60% 0 0; }
   .win-hill.two { bottom:0; left:35%; right:-10%; height:26%; background:linear-gradient(180deg,#8a6f96,#6a577f); }
+  /* a little bird glides across the window now and then */
+  .win-birds { position:absolute; left:0; top:26%; width:14px; height:10px; opacity:0; z-index:2;
+    animation: birdFly 20s ease-in-out infinite; }
+  .win-birds .b { position:absolute; width:8px; height:8px; }
+  .win-birds .b::before, .win-birds .b::after { content:""; position:absolute; top:0; width:6px; height:6px;
+    border-top:2px solid #2f2740; border-radius:50%; }
+  .win-birds .b::before { left:-4px; transform:rotate(18deg); transform-origin:right center; animation: flap .35s ease-in-out infinite; }
+  .win-birds .b::after  { left:2px;  transform:rotate(-18deg) scaleX(-1); transform-origin:left center; animation: flap .35s ease-in-out infinite; }
+  .win-birds .b2 { left:16px; top:6px; transform:scale(.75); }
+  @keyframes flap { 0%,100%{ border-top-width:2px; height:6px; } 50%{ height:2px; } }
+  @keyframes birdFly {
+    0%   { transform: translate(-20px, 30px) scale(.7); opacity:0; }
+    8%   { opacity:.85; }
+    45%  { transform: translate(120px, -6px) scale(.95); opacity:.85; }
+    60%  { transform: translate(180px, 8px) scale(1); opacity:.85; }
+    72%  { transform: translate(240px, -10px) scale(.9); opacity:0; }
+    100% { transform: translate(240px, -10px) scale(.9); opacity:0; }
+  }
   .win-bar-v, .win-bar-h { position:absolute; background:#7a5f45; z-index:3; }
   .win-bar-v { top:0; bottom:0; left:calc(50% - 3px); width:6px; }
   .win-bar-h { left:0; right:0; top:calc(50% - 3px); height:6px; }
@@ -197,7 +215,8 @@
   /* parallax layers glide smoothly toward the cursor */
   .win, .poster, .shelf, .hangplant, .lamp, .pot { transition: transform .25s ease-out; will-change: transform; }
   @media (prefers-reduced-motion: reduce){
-    .hangplant svg, .pot svg, .lamp svg, .win-sun, .lights i, .mug .steam { animation: none !important; }
+    .hangplant svg, .pot svg, .lamp svg, .win-sun, .lights i, .mug .steam, .win-birds, .win-birds .b::before, .win-birds .b::after { animation: none !important; }
+    .win-birds { display:none !important; }
     .win, .poster, .shelf, .hangplant, .lamp, .pot { transition: none !important; transform: none !important; }
   }
   .bar { background:#21262d; padding:11px 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #30363d; }
@@ -249,6 +268,7 @@
           <div class="win-sun"></div>
           <div class="win-hill"></div>
           <div class="win-hill two"></div>
+          <div class="win-birds"><span class="b b1"></span><span class="b b2"></span></div>
         </div>
         <div class="win-bar-v"></div>
         <div class="win-bar-h"></div>
