@@ -240,6 +240,45 @@
   #cmdInput { flex:1; background:transparent; border:none; outline:none; color:#e6edf3;
     font-family:inherit; font-size:14.5px; caret-color:#7ee787; padding-left:6px; }
   .files { color:#79c0ff; }
+
+  /* ===================== MOBILE ===================== */
+  @media (max-width:640px){
+    body { padding:0; align-items:stretch; }
+
+    /* Desk scene: go portrait so it fills the screen instead of a thin strip */
+    .room { width:100vw; aspect-ratio:auto; height:100dvh; max-height:100dvh; }
+
+    /* Declutter: hide small wall décor that crowds/overlaps a narrow screen */
+    .poster, .shelf, .hangplant, .lights { display:none; }
+
+    /* Make the (tappable) monitor the hero + readable */
+    .monitor { width:min(84%,330px); bottom:74px; }
+    .screen { min-height:150px; padding:16px 16px; }
+    .screen .m1 { font-size:12.5px; }
+    .screen .m2 { font-size:21px; }
+    .screen .m3 { font-size:12px; margin-top:10px; }
+    .screen .cta-line { font-size:12.5px; margin-top:12px; }
+
+    /* Keep supporting props from colliding with the enlarged monitor */
+    .lamp { width:96px; left:5%; }
+    .pot { width:52px; left:83%; }
+    .books { display:none; }
+    .keyboard { width:min(52%,230px); }
+
+    .desk-cap { font-size:12px; bottom:4%; padding:8px 14px;
+      white-space:normal; max-width:88vw; text-align:center; line-height:1.5; }
+
+    /* Terminal: full-bleed and comfortable on phones */
+    .term { border-radius:0; border-left:none; border-right:none; max-width:100%; }
+    .term.expanded { max-width:100%; }
+    .bar { padding:10px 12px; }
+    .title { font-size:12px; }
+    .deskbtn { font-size:11px; padding:2px 7px; }
+    .body, .term.expanded .body { height:calc(100dvh - 44px); padding:16px 14px; }
+    .line, .out, .job ul, .chip { font-size:13.5px; }
+    /* 16px input avoids iOS auto-zoom on focus */
+    #cmdInput, .inputline .il-prompt { font-size:16px; }
+  }
 </style>
 </head>
 <body>
@@ -419,7 +458,7 @@ Type <span class="hint">help</span> to see available commands. Try <span class="
 
 <script>
 const contact = {
-  email: 'sthevath@uwaterloo.ca', phone: '416-875-1719',
+  email: 'sthevath@uwaterloo.ca',
   linkedin: 'linkedin.com/in/saindhavi', github: 'github.com/saindhavi1'
 };
 const S = {}; // section HTML
@@ -427,7 +466,7 @@ const S = {}; // section HTML
 S.about = `<div class="out">Saindhavi Thevathasan — Computer Engineering @ University of Waterloo.
 I build reliable backend systems and developer tooling: from Ruby on Rails data
 migrations and BigQuery pipelines at Shopify to STM32 firmware written in C.
-Three SWE internships. Currently open to new-grad software roles.</div>`;
+Three SWE internships.</div>`;
 
 S.experience = `<div class="rhead">## experience</div>
   <div class="job"><div><span class="role">Software Engineering Intern</span> · <span class="co">Shopify</span> <span class="when">— May 2026 – Aug 2026 · Toronto</span></div>
@@ -467,7 +506,6 @@ S.projects = `<div class="rhead">## projects</div>
     <li>Won first place at Kids for Kids Toronto's GenZ Can Hack Hackathon.</li></ul></div>`;
 
 S.contact = `<div class="out"><span class="key">email</span>     = <a href="mailto:${contact.email}">${contact.email}</a>
-<span class="key">phone</span>     = ${contact.phone}
 <span class="key">linkedin</span>  = <a href="https://${contact.linkedin}">${contact.linkedin}</a>
 <span class="key">github</span>    = <a href="https://${contact.github}">${contact.github}</a></div>`;
 
