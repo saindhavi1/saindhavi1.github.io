@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Saindhavi Thevathasan's interactive portfolio and resume - Computer Engineering at the University of Waterloo.">
 <title>saindhavi@dev ~ Terminal Résumé</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -234,6 +235,7 @@
   .skills { display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 8px; }
   .chip { background:#21262d; border:1px solid #30363d; border-radius:6px; padding:3px 10px; color:#a5d6ff; font-size:12.5px; }
   .grp { color:#d2a8ff; margin:8px 0 2px; }
+  .contact-row { display:grid; grid-template-columns:9ch minmax(0,1fr); gap:8px; }
   /* input line */
   .inputline { display:flex; align-items:center; }
   .inputline .il-prompt { color:#7ee787; white-space:pre; }
@@ -458,6 +460,7 @@ Type <span class="hint">help</span> to see available commands. Try <span class="
 
 <script>
 const contact = {
+  phone: '416-875-1719',
   email: 'sthevath@uwaterloo.ca',
   linkedin: 'linkedin.com/in/saindhavi', github: 'github.com/saindhavi1'
 };
@@ -470,9 +473,9 @@ Three SWE internships.</div>`;
 
 S.experience = `<div class="rhead">## experience</div>
   <div class="job"><div><span class="role">Software Engineering Intern</span> · <span class="co">Shopify</span> <span class="when">— May 2026 – Aug 2026 · Toronto</span></div>
-    <ul><li>Led a Shopify Taxes migration from legacy tax-partner records to a centralized config system, auditing 74 query paths and shipping dual-write, backfill, parity-check, and rollout-safety work.</li>
-    <li>Built Ruby/Rails tools to safely backfill and compare tax-partner data — dry-runs, scoped targeting, telemetry, mismatch handling.</li>
-    <li>Improved tax-filing workflows: contact lookup, Sales Tax ID validation, GraphQL access updates, maintenance-task safeguards, feature-flag cleanup.</li></ul></div>
+    <ul><li>Led a multi-phase migration of production tax-configuration data onto a centralized configuration system, consolidating merchant tax-provider settings into a single source of truth.</li>
+    <li>Built the Ruby on Rails backend and tooling for a safe migration: a unified write path syncing both data stores, automated cross-system reconciliation, and instrumentation that diagnosed failing records mid-run.</li>
+    <li>Shipped customer-facing tax-setup and billing fixes, including localized form validation in React/TypeScript, corrected store-type billing, and a regional shipping-tax calculation fix.</li></ul></div>
   <div class="job"><div><span class="role">Software Engineering Intern</span> · <span class="co">Shopify</span> <span class="when">— Sep 2025 – Dec 2025 · Toronto</span></div>
     <ul><li>Resolved a data-redaction pipeline incident with BigQuery filtering to prevent NULL rewrites in non-PII columns — unblocking 71 tables and 100s of erasure batches.</li>
     <li>Migrated employee data requests to a cheaper platform using Rails state machines, RSpec table-driven tests, and Flipper flags — saving $60,000.</li>
@@ -489,9 +492,9 @@ S.education = `<div class="rhead">## education</div>
 
 S.skills = `<div class="rhead">## skills</div>
   <div class="grp">languages & frameworks</div>
-  <div class="skills"><span class="chip">Python</span><span class="chip">Java</span><span class="chip">C++</span><span class="chip">C</span><span class="chip">JavaScript</span><span class="chip">Ruby on Rails</span><span class="chip">Go</span><span class="chip">React</span><span class="chip">Node.js</span><span class="chip">SQL</span><span class="chip">BigQuery</span><span class="chip">Pandas</span><span class="chip">REST APIs</span><span class="chip">Modbus</span></div>
+  <div class="skills"><span class="chip">Python</span><span class="chip">Java</span><span class="chip">C++</span><span class="chip">C</span><span class="chip">JavaScript</span><span class="chip">Ruby on Rails</span><span class="chip">Go</span><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">SQL</span><span class="chip">BigQuery</span><span class="chip">Node.js</span><span class="chip">React</span><span class="chip">Pandas</span><span class="chip">PyInstaller</span><span class="chip">Modbus</span><span class="chip">REST APIs / HTTP Requests</span></div>
   <div class="grp">developer tools</div>
-  <div class="skills"><span class="chip">Git</span><span class="chip">Docker</span><span class="chip">Grafana</span><span class="chip">Postman</span><span class="chip">Figma</span><span class="chip">Linux/Unix</span><span class="chip">VS Code</span></div>
+  <div class="skills"><span class="chip">Git</span><span class="chip">GitHub</span><span class="chip">VS Code</span><span class="chip">Eclipse</span><span class="chip">Postman</span><span class="chip">Docker</span><span class="chip">Grafana</span><span class="chip">Figma</span><span class="chip">Microsoft Office</span><span class="chip">Linux/Unix</span></div>
   <div class="grp">hardware</div>
   <div class="skills"><span class="chip">STM32</span><span class="chip">Arduino</span><span class="chip">Embedded C</span><span class="chip">Soldering</span></div>`;
 
@@ -505,11 +508,14 @@ S.projects = `<div class="rhead">## projects</div>
     <li>Built with LDR sensors + servo motors; full circuit simulated in AutoCAD.</li>
     <li>Won first place at Kids for Kids Toronto's GenZ Can Hack Hackathon.</li></ul></div>`;
 
-S.contact = `<div class="out"><span class="key">email</span>     = <a href="mailto:${contact.email}">${contact.email}</a>
-<span class="key">linkedin</span>  = <a href="https://${contact.linkedin}">${contact.linkedin}</a>
-<span class="key">github</span>    = <a href="https://${contact.github}">${contact.github}</a></div>`;
+S.contact = `<div class="out">
+<div class="contact-row"><span class="key">phone</span><a href="tel:+1${contact.phone.replaceAll('-','')}">${contact.phone}</a></div>
+<div class="contact-row"><span class="key">email</span><a href="mailto:${contact.email}">${contact.email}</a></div>
+<div class="contact-row"><span class="key">linkedin</span><a href="https://${contact.linkedin}">${contact.linkedin}</a></div>
+<div class="contact-row"><span class="key">github</span><a href="https://${contact.github}">${contact.github}</a></div>
+</div>`;
 
-const FILES = ['about.txt','experience.log','education.txt','skills/','projects/','contact.card','resume.pdf'];
+const FILES = ['about.txt','experience.log','education.txt','skills/','projects/','contact.card'];
 
 const help = `<div class="out">Available commands:
   <span class="hint">about</span>         who I am
@@ -520,7 +526,7 @@ const help = `<div class="out">Available commands:
   <span class="hint">contact</span>       how to reach me
   <span class="hint">ls</span>            list files
   <span class="hint">cat</span> [file]    print a file, e.g. <span class="comment">cat about.txt</span>
-  <span class="hint">open</span> [x]      open linkedin / github / resume / email
+  <span class="hint">open</span> [x]      open linkedin / github / email
   <span class="hint">all</span>           print the whole résumé
   <span class="hint">clear</span>         clear the screen        <span class="comment">(alias: cls)</span>
   <span class="hint">help</span>          this menu
@@ -685,9 +691,9 @@ function exitTerminal(){
 
 function openLink(what){
   const map = { linkedin:'https://'+contact.linkedin, github:'https://'+contact.github,
-    resume:'#', email:'mailto:'+contact.email };
+    email:'mailto:'+contact.email };
   if(map[what]){ print(`<div class="out">Opening ${what}… <a href="${map[what]}">${map[what].replace('mailto:','')}</a></div>`); window.open(map[what],'_blank'); }
-  else print(`<div class="out err">open: unknown target '${what}'. Try: linkedin, github, resume, email.</div>`);
+  else print(`<div class="out err">open: unknown target '${what}'. Try: linkedin, github, email.</div>`);
 }
 
 function handle(raw){
@@ -722,7 +728,6 @@ function handle(raw){
       else if(arg.startsWith('skills')) print(S.skills);
       else if(arg.startsWith('projects')) print(S.projects);
       else if(arg.startsWith('contact')) print(S.contact);
-      else if(arg.startsWith('resume')) { print('<div class="out">resume.pdf is a binary file. Try <span class="hint">open resume</span>.</div>'); }
       else print(`<div class="out err">cat: ${arg}: No such file. Try 'ls'.</div>`);
       break;
     case 'game': case 'guess': startGuess(); break;
