@@ -105,6 +105,18 @@ li a {
 
 }
 
+.featured-project {
+    background-color: rgba(255, 255, 255, 0.28);
+}
+
+.featured-project h2 {
+    color: #3D2C5E;
+}
+
+.featured-project img {
+    object-fit: contain;
+}
+
 .project:last-child {
     border-bottom: none;
 }
@@ -149,6 +161,14 @@ li a {
 .projects button:hover {
     background-color: #3D2C5E;
     color: #8B8BBA;
+}
+
+.projects .live {
+    background-color: #3D2C5E;
+}
+
+.projects .live:hover {
+    background-color: #241936;
 }
 
 .skills {
