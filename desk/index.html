@@ -193,7 +193,9 @@
   .screen .m2 span { color:#8b949e; font-weight:400; }
   .screen .m3 { color:#adbac7; font-size:12.5px; margin-top:12px; }
   .screen .cta-line { color:#ffbd2e; font-size:12.5px; margin-top:16px; }
-  .screen .bk { display:inline-block; width:8px; height:14px; background:#7ee787; vertical-align:middle; margin-left:3px; animation:blink 1s steps(2) infinite; }
+  .screen .bk { display:inline-block; width:8px; height:14px; background:#7ee787; vertical-align:middle; margin-left:4px;
+    box-shadow:0 0 7px rgba(126,231,135,.65); animation:blink 1s steps(1,end) infinite; }
+  @keyframes blink { 0%,49% { opacity:1; } 50%,100% { opacity:0; } }
   .neck { position:absolute; left:50%; bottom:-48px; transform:translateX(-50%); width:20px; height:50px;
     background:linear-gradient(90deg,#171a20 0%, #2e343e 45%, #363d48 55%, #171a20 100%); border-radius:3px; }
   .foot { position:absolute; left:50%; bottom:-56px; transform:translateX(-50%); width:150px; height:20px;
