@@ -534,6 +534,7 @@ const help = `<div class="out">Available commands:
   <span class="hint">open</span> [x]      open linkedin / github / email
   <span class="hint">all</span>           print the whole résumé
   <span class="hint">clear</span>         clear the screen        <span class="comment">(alias: cls)</span>
+  <span class="hint">exit</span>          return to the desk UI
   <span class="hint">help</span>          this menu
 
 <span class="key">Fun stuff:</span>
@@ -721,6 +722,7 @@ function handle(raw){
     case 'ls': case 'dir': print(`<div class="out files">${FILES.join('   ')}</div>`); break;
     case 'all': case './resume': order.forEach(k=>print(S[k])); break;
     case 'open': case 'xdg-open': openLink(arg); break;
+    case 'exit': exitTerminal(); return;
     case 'clear': case 'cls':
       const body=document.getElementById('body');
       [...body.querySelectorAll('div')].forEach(d=>{ if(d.id!=='inputline') d.remove(); });
@@ -763,7 +765,7 @@ inp.addEventListener('keydown', e=>{
   else if(e.key==='ArrowDown'){ if(hix>0){ hix--; inp.value=history[hix]; } else { hix=-1; inp.value=''; } e.preventDefault(); }
   else if(e.key==='Tab'){
     e.preventDefault();
-    const cmds=['about','experience','education','skills','projects','contact','ls','cat','open','all','clear','help','game','quiz','neofetch','theme','matrix','coffee'];
+    const cmds=['about','experience','education','skills','projects','contact','ls','cat','open','all','clear','exit','help','game','quiz','neofetch','theme','matrix','coffee'];
     const m=cmds.filter(x=>x.startsWith(inp.value.toLowerCase()));
     if(m.length===1) inp.value=m[0];
     else if(m.length>1) print(`<div class="out comment">${m.join('   ')}</div>`), scrollBottom();
